@@ -5,7 +5,7 @@
 
 Ce document est notre référence pour tout le projet. On le met à jour à chaque décision importante.
 
-- **Statut** : étapes 0 à 5 terminées, maquettes de toute l'app validées. Étape 6 (nouvelle navigation) codée, en test.
+- **Statut** : étapes 0 à 6 terminées (l'app a sa vraie structure : onglets Accueil, Voyages, Profil et onglets du voyage). Prochaine étape : les dépenses.
 - **Maquettes de référence** : tableau « Voylo — Maquettes de l'app » (https://claude.ai/artifact/3Rrk1EXcxvN3G4TWPgsg1N)
 - **Dernière mise à jour** : 25 novembre 2026 (maquettes de toute l'app, swipe logement)
 
@@ -306,7 +306,7 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 | 3 | ✅ **Comptes** : projet Supabase, connexion par code e-mail, prénom | Créer ton compte et te connecter |
 | 4 | ✅ **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre |
 | 5 | ✅ **Dispos, budget et dates compatibles** | Tes dispos, le calendrier du groupe, le budget commun |
-| 6 | **Nouvelle navigation** : onglets Accueil, Voyages, Profil ; onglets du voyage ; Accueil social | L'app avec sa vraie structure |
+| 6 | ✅ **Nouvelle navigation** : onglets Accueil, Voyages, Profil ; onglets du voyage ; Accueil social | L'app avec sa vraie structure |
 | 7 | **Dépenses** : ajouter, répartir, soldes, « pour être quittes » | Ajouter des dépenses et voir qui doit quoi |
 | 8 | **Sondages et swipe logement** | Ajouter des annonces, swiper, voir le verdict |
 | 9 | **Planning** jour par jour | Construire le programme d'un voyage |
