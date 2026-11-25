@@ -32,7 +32,7 @@ Les 18–30 ans (étudiants, jeunes actifs, groupes d'amis) qui organisent ensem
 Voylo est une **application sociale et lifestyle qui donne envie de voyager**, pas un outil de productivité. L'expérience doit être fluide, spontanée, chaleureuse et engageante.
 
 ### Contexte
-Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance étape par étape, en testant avec de vrais utilisateurs sur iPhone.
+Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance étape par étape, en testant avec de vrais utilisateurs sur iPhone. Un vrai groupe d'amis, avec un vrai voyage en vue, servira de premier groupe de test.
 
 ---
 
@@ -46,6 +46,8 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 | Rejoindre un voyage | Installation de l'app obligatoire. Invitation par lien, avec un code de voyage court en secours (ex. `VOY-4K7P`). |
 | Rôles | Un ou plusieurs organisateurs avec plus de droits. Les autres sont participants. |
 | Dépenses | Calcul de « qui doit combien à qui » uniquement, sans paiement dans l'app. Euros seulement en V1. |
+| Budget par personne | Tout compris : transport, logement, activités, repas et dépenses sur place |
+| Groupe de test | Un vrai groupe d'amis, avec un vrai voyage en vue, testera la V1 |
 | Langues | Français d'abord, anglais ensuite. Code prévu pour les deux dès le départ. |
 | Hors connexion | Consultation du planning hors ligne en V1. Ajout hors ligne plus tard. |
 | Données | Supabase hébergé en Europe (RGPD) |
@@ -104,7 +106,7 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 
 ### Disponibilités, budget, préférences
 - Chaque participant indique ses plages de dates disponibles dans la période du voyage.
-- Budget : une fourchette par personne (ex. 300–500 €), hors dépenses sur place ou tout compris, à préciser.
+- Budget : une fourchette par personne, tout compris (ex. 300–500 € pour transport, logement, activités, repas et dépenses sur place).
 - Préférences : quelques choix rapides et visuels (plage, ville, nature, fête, détente, culture…), pas de formulaire long.
 
 ### Dates compatibles
@@ -296,6 +298,5 @@ Lance `npm install` en plus quand je te le signale.
 ---
 
 ## 12. Questions ouvertes
-- As-tu un groupe d'amis avec un vrai voyage en vue pour tester la V1 ? Ça nous donnerait une date cible.
-- Le budget par personne : transport et logement seulement, ou tout compris ?
-- Le nom de domaine (voylo.app, getvoylo.com…) : disponibilité à vérifier.
+- Le voyage du groupe de test : quand, combien de personnes, destination déjà choisie ou non ? Ça fixera la date cible de la V1.0.
+- Le nom de domaine (voylo.app, getvoylo.com…) : on décide plus tard, au plus tard à l'étape 8.
