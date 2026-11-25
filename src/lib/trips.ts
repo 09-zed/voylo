@@ -5,7 +5,7 @@ import { colors } from '@/theme';
 import { reportError } from './report';
 import { supabase } from './supabase';
 
-export type CoverKey = 'ville' | 'plage' | 'montagne' | 'roadtrip';
+export type CoverKey = 'ville' | 'hiver' | 'plage' | 'montagne' | 'roadtrip';
 export type TripStatus = 'discussion' | 'dates_fixees' | 'en_cours' | 'termine';
 export type Role = 'organisateur' | 'participant';
 

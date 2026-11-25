@@ -14,6 +14,7 @@ type Cover = {
 
 const KEYS: { key: CoverKey; color: string; plainText: string }[] = [
   { key: 'ville', color: colors.night, plainText: colors.white },
+  { key: 'hiver', color: colors.night, plainText: colors.white },
   { key: 'plage', color: colors.sky, plainText: colors.black },
   { key: 'montagne', color: colors.lime, plainText: colors.black },
   { key: 'roadtrip', color: colors.sunset, plainText: colors.black },

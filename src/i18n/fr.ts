@@ -80,6 +80,7 @@ const fr = {
   },
   covers: {
     ville: 'Ville',
+    hiver: 'Ville en hiver',
     plage: 'Plage',
     montagne: 'Montagne',
     roadtrip: 'Road trip',

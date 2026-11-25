@@ -82,6 +82,7 @@ const en: Translations = {
   },
   covers: {
     ville: 'City',
+    hiver: 'Winter city',
     plage: 'Beach',
     montagne: 'Mountains',
     roadtrip: 'Road trip',
