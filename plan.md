@@ -5,7 +5,7 @@
 
 Ce document est notre référence pour tout le projet. On le met à jour à chaque décision importante.
 
-- **Statut** : étapes 0 à 2 terminées (projet Expo, identité visuelle, socle de l'app avec écrans de démo)
+- **Statut** : étapes 0 à 3 terminées, étape 4 (voyages et invitations) codée, en test
 - **Dernière mise à jour** : 25 novembre 2026
 
 ---
@@ -268,7 +268,7 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 | 0 | ✅ **Fondations** : projet Expo, GitHub, Expo Go | L'écran « Voylo — Ça marche ! » |
 | 1 | ✅ **Identité et maquettes** : direction artistique, logo, couleurs, typos, maquettes des écrans clés | Les maquettes en images ou en prototype cliquable |
 | 2 | ✅ **Socle de l'app** : navigation, composants de base, traductions, thème | Une navigation entre écrans vides, avec le vrai style Voylo |
-| 3 | **Comptes** : projet Supabase, connexion par code e-mail, profil express | Créer ton compte et te connecter |
+| 3 | ✅ **Comptes** : projet Supabase, connexion par code e-mail, profil express | Créer ton compte et te connecter |
 | 4 | **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre depuis un autre compte |
 | 5 | **Dispos, budget et dates compatibles** | Renseigner tes dispos et voir le calendrier du groupe |
 | 6 | **Sondages** | Créer un sondage, voter, clôturer |
@@ -286,7 +286,8 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 |---|---|---|---|
 | GitHub | Code | Gratuit | ✅ Fait |
 | Expo | Expo Go, builds | Gratuit pour démarrer | ✅ Fait |
-| Supabase | Base de données, connexion | Gratuit pour démarrer | Étape 3 |
+| Supabase | Base de données, connexion (projet « voylo », Francfort) | Gratuit pour démarrer | ✅ Fait |
+| Resend | Envoi des e-mails de connexion | Gratuit jusqu'à 3 000 e-mails par mois | ✅ Fait (n'envoie qu'à ton adresse tant qu'il n'y a pas de domaine) |
 | Apple Developer | Development build, TestFlight, App Store | 99 $ par an | Étape 8 |
 | Google Cloud | Se connecter avec Google | Gratuit | Étape 8 |
 | Nom de domaine | Liens d'invitation, site vitrine | Environ 10 à 15 € par an | Étape 8 |

@@ -55,7 +55,7 @@ function RootNavigator() {
 
   // Sends each person to the right place for their state:
   // signed out → welcome, no first name yet → profile, otherwise → their trips.
-  // Until Supabase is configured, the demo leaves every screen open.
+  // Without Supabase settings (missing .env), there is nothing to sign in to: leave the screens open.
   useEffect(() => {
     if (loading || !supabaseConfigured) return;
 

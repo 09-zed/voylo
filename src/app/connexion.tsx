@@ -9,7 +9,6 @@ import { TextField } from '@/components/TextField';
 import { t } from '@/i18n';
 import { useAuth } from '@/lib/auth';
 import { friendlyAuthError } from '@/lib/authErrors';
-import { supabaseConfigured } from '@/lib/supabase';
 import { colors } from '@/theme';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,11 +23,6 @@ export default function LoginScreen() {
 
   const submit = async () => {
     if (!valid || sending) return;
-
-    if (!supabaseConfigured) {
-      router.replace('/voyages');
-      return;
-    }
 
     setSending(true);
     setError(null);
@@ -50,7 +44,7 @@ export default function LoginScreen() {
         <>
           <Button label={t('login.submit')} disabled={!valid} loading={sending} onPress={submit} />
           <AppText variant="caption" color={colors.textMuted} style={styles.note}>
-            {supabaseConfigured ? t('login.socialSoon') : t('login.demoNote')}
+            {t('login.socialSoon')}
           </AppText>
         </>
       }

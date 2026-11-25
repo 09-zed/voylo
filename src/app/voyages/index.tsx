@@ -1,29 +1,31 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
-import { AvatarStack } from '@/components/AvatarStack';
 import { Button } from '@/components/Button';
-import { CountdownSticker } from '@/components/CountdownSticker';
 import { Logo } from '@/components/Logo';
 import { PhotoPlaceholder } from '@/components/PhotoPlaceholder';
-import { demoTrips } from '@/data/demo';
+import { TripCard } from '@/components/TripCard';
 import { t } from '@/i18n';
 import { useAuth } from '@/lib/auth';
-import { daysUntil, formatDay } from '@/lib/dates';
+import { fetchTrips, useLoad } from '@/lib/trips';
 import { colors, radius, space } from '@/theme';
 
 export default function TripsScreen() {
   const insets = useSafeAreaInsets();
   const { profile, signOut } = useAuth();
+  const { data: trips, error, loading, refresh } = useLoad(fetchTrips);
 
   return (
     <View style={styles.screen}>
-      <ScrollView contentContainerStyle={[styles.content, { paddingTop: insets.top + space.s }]}>
+      <ScrollView
+        contentContainerStyle={[styles.content, { paddingTop: insets.top + space.s }]}
+        refreshControl={<RefreshControl refreshing={false} onRefresh={refresh} />}
+      >
         <View style={styles.top}>
           <Logo size={32} />
-          {profile && <Button label={t('trips.signOut')} variant="link" onPress={signOut} />}
+          <Button label={t('trips.signOut')} variant="link" onPress={signOut} />
         </View>
         {profile && (
           <AppText variant="bodyStrong" style={styles.hello}>
@@ -34,36 +36,32 @@ export default function TripsScreen() {
           {t('trips.title')}
         </AppText>
 
-        <View style={styles.list}>
-          {demoTrips.map((trip) => (
-            <Pressable
-              key={trip.id}
-              accessibilityRole="link"
-              accessibilityLabel={trip.name}
-              onPress={() => router.push(`/voyages/${trip.id}`)}
-              style={({ pressed }) => [styles.card, pressed && styles.pressed]}
-            >
-              <PhotoPlaceholder label={t('trip.photoLabel')} color={colors.night} textColor={colors.white} style={styles.cardPhoto} />
-              <View style={styles.sticker}>
-                <CountdownSticker days={daysUntil(trip.departure)} caption={t('trips.countdownSuffix')} size="small" />
-              </View>
-              <View style={styles.cardBody}>
-                <View style={styles.cardText}>
-                  <AppText variant="title">{trip.name}</AppText>
-                  <AppText variant="caption" color={colors.textMuted}>
-                    {formatDay(trip.departure)}
-                  </AppText>
-                </View>
-                <AvatarStack members={trip.members} size={32} />
-              </View>
-            </Pressable>
-          ))}
-        </View>
+        {error && !trips ? (
+          <View style={styles.message}>
+            <AppText>{t('errors.loadTrips')}</AppText>
+            <Button label={t('common.retry')} variant="small" onPress={refresh} style={styles.retry} />
+          </View>
+        ) : trips && trips.length === 0 ? (
+          <View style={styles.empty}>
+            <PhotoPlaceholder label={t('trips.emptyPhotoLabel')} color={colors.sky} style={styles.emptyPhoto} />
+            <AppText variant="title" style={styles.emptyTitle}>
+              {t('trips.emptyTitle')}
+            </AppText>
+            <AppText color={colors.textMuted}>{t('trips.emptyText')}</AppText>
+          </View>
+        ) : (
+          <View style={styles.list}>
+            {loading && !trips
+              ? [0, 1].map((i) => <View key={i} style={styles.skeleton} />)
+              : trips?.map((trip) => (
+                  <TripCard key={trip.id} trip={trip} onPress={() => router.push(`/voyages/${trip.id}`)} />
+                ))}
+          </View>
+        )}
       </ScrollView>
 
       <View style={[styles.actions, { paddingBottom: insets.bottom + space.l }]}>
-        {/* Creating and joining for real arrive in step 4 of plan.md. */}
-        <Button label={t('trips.create')} onPress={() => {}} />
+        <Button label={t('trips.create')} onPress={() => router.push('/voyages/nouveau')} />
         <Button label={t('trips.join')} variant="link" onPress={() => router.push('/rejoindre')} />
       </View>
     </View>
@@ -77,21 +75,11 @@ const styles = StyleSheet.create({
   hello: { marginTop: space.l },
   title: { marginTop: space.xs },
   list: { marginTop: space.xl, gap: space.l },
-  card: {
-    borderRadius: radius.l,
-    backgroundColor: colors.surface,
-    overflow: 'hidden',
-  },
-  pressed: { transform: [{ scale: 0.98 }] },
-  cardPhoto: { height: 160 },
-  sticker: { position: 'absolute', top: space.m, right: space.m },
-  cardBody: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: space.l,
-    gap: space.m,
-  },
-  cardText: { flexShrink: 1, gap: 2 },
+  skeleton: { height: 196, borderRadius: radius.l, backgroundColor: colors.surface },
+  message: { marginTop: space.xl, gap: space.m, alignItems: 'flex-start' },
+  retry: { alignSelf: 'flex-start' },
+  empty: { marginTop: space.xl },
+  emptyPhoto: { height: 220, borderRadius: radius.l },
+  emptyTitle: { marginTop: space.xl, marginBottom: space.s },
   actions: { paddingHorizontal: space.xl, paddingTop: space.m, gap: space.s, backgroundColor: colors.white },
 });
