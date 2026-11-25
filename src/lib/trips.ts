@@ -46,8 +46,11 @@ type TripRow = {
   }[];
 };
 
+// The relationship names are spelled out because other tables (availability_days,
+// member_preferences) also link trips, members and profiles, and the API won't guess.
 const TRIP_FIELDS =
-  'id, name, cover, period_label, start_date, end_date, status, invite_code, trip_members(user_id, role, joined_at, profiles(first_name, avatar_url))';
+  'id, name, cover, period_label, start_date, end_date, status, invite_code, ' +
+  'trip_members!trip_members_trip_id_fkey(user_id, role, joined_at, profiles!trip_members_user_profile_fkey(first_name, avatar_url))';
 
 const AVATAR_COLORS = [colors.sunset, colors.sky, colors.lime, colors.black];
 
