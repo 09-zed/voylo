@@ -97,7 +97,7 @@ export default function TripScreen() {
         {inviteFirst && invite}
 
         <MyAnswersCard tripId={trip.id} done={hasAnswered(planning.get(me))} />
-        {!trip.startDate && !solo && <GroupDatesCard trip={trip} planning={planning} />}
+        {!trip.startDate && <GroupDatesCard trip={trip} planning={planning} />}
         <BudgetCard trip={trip} planning={planning} />
         {!solo && <WaitingCard trip={trip} planning={planning} me={me} />}
 
