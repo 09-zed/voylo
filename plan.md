@@ -234,7 +234,7 @@ On s'inspire de l'esprit de ces références, sans copier leurs écrans :
 Maquettes de référence : tableau « Voylo — Pistes typo », section « Direction Voylo ».
 
 - **Style** : énergique, stickers et scrapbook. Photos scotchées façon polaroid, surlignages lime légèrement inclinés, doodles dessinés à la main (avion, cœur, traits d'énergie).
-- **Logo** : « voylo. » en minuscules, avec le point, en Montserrat ExtraBold noir, avec un contour blanc façon sticker.
+- **Logo** : dessiné par toi (`assets/logo/voylo-logo.svg`) : « voylo. » en lettres noires très grasses, une ellipse lime en « orbite » et trois éclats bleu ciel. Sur fond lime, on utilise la variante avec l'ellipse blanche (`voylo-logo-sur-lime.svg`).
 - **Icône de l'app** : « v. » noir sur fond lime, coins arrondis.
 - **Palette** :
 
