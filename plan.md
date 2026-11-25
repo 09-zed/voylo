@@ -5,7 +5,7 @@
 
 Ce document est notre référence pour tout le projet. On le met à jour à chaque décision importante.
 
-- **Statut** : étapes 0 à 6 terminées (l'app a sa vraie structure : onglets Accueil, Voyages, Profil et onglets du voyage). Prochaine étape : les dépenses.
+- **Statut** : étapes 0 à 6 terminées (l'app a sa vraie structure : onglets Accueil, Voyages, Profil et onglets du voyage). Prochaine étape : les sondages et le swipe logement.
 - **Maquettes de référence** : tableau « Voylo — Maquettes de l'app » (https://claude.ai/artifact/3Rrk1EXcxvN3G4TWPgsg1N)
 - **Dernière mise à jour** : 25 novembre 2026 (maquettes de toute l'app, swipe logement)
 
@@ -46,7 +46,7 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 | Connexion | Code à 6 chiffres reçu par e-mail (fonctionne dans Expo Go), puis Se connecter avec Apple et Google à l'étape 12 |
 | Rejoindre un voyage | Installation de l'app obligatoire. Invitation par lien, avec un code de voyage court en secours (ex. `VOY-4K7P`). |
 | Rôles | Un ou plusieurs organisateurs avec plus de droits. Les autres sont participants. |
-| Dépenses | Calcul de « qui doit combien à qui » uniquement, sans paiement dans l'app. Euros seulement en V1. |
+| Dépenses | Version légère : elles viennent surtout des décisions (logement validé, activité réservée : « Qui a payé ? » en un tap). Ajout manuel en 3 secondes (montant + qui a payé, partagé entre tous par défaut). Pas de chiffres pendant le voyage : un seul écran « Pour être quittes » au retour. Sans paiement dans l'app, euros seulement. |
 | Budget par personne | Tout compris : transport, logement, activités, repas et dépenses sur place |
 | Groupe de test | 4 amis, week-end à Amsterdam, tous sur iPhone. Ils recevront l'app via TestFlight (étape 12). |
 | Navigation | 3 onglets en bas : Accueil, Voyages, Profil. Dans un voyage, la barre du bas laisse la place aux 5 onglets du voyage : Aperçu, Dates, Sondages, Planning, Dépenses. |
@@ -149,11 +149,11 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 - Une vue par jour, avec des éléments : activité, transport, logement, repas, libre.
 - Chaque élément peut avoir une heure, un lieu, un lien de réservation, un prix et une personne responsable.
 
-### Dépenses (V1.2)
-- Qui a payé, combien, pour quoi, et pour qui.
-- Répartition égale, par parts, ou par montants précis.
-- Écran « Soldes » : qui doit combien à qui, avec le moins de remboursements possible.
-- Un remboursement est marqué comme réglé à la main.
+### Dépenses (version légère)
+- **Automatiques d'abord** : quand le groupe valide un logement (swipe) ou une activité réservée (planning), l'app demande « Qui a payé ? ». Un tap et la dépense existe, partagée entre tous.
+- **Ajout manuel en 3 secondes** : montant + qui a payé. Partagé entre tout le monde par défaut. Pas de titre ni de catégorie obligatoires.
+- **Pas de tableau de chiffres pendant le voyage.** Au retour, un seul écran « Pour être quittes » : le moins de virements possible, chacun marqué « réglé » à la main.
+- Le récap peut nourrir la rétro façon Wrapped (« Le plus généreux du groupe »).
 
 ---
 
@@ -307,8 +307,8 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 | 4 | ✅ **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre |
 | 5 | ✅ **Dispos, budget et dates compatibles** | Tes dispos, le calendrier du groupe, le budget commun |
 | 6 | ✅ **Nouvelle navigation** : onglets Accueil, Voyages, Profil ; onglets du voyage ; Accueil social | L'app avec sa vraie structure |
-| 7 | **Dépenses** : ajouter, répartir, soldes, « pour être quittes » | Ajouter des dépenses et voir qui doit quoi |
-| 8 | **Sondages et swipe logement** | Ajouter des annonces, swiper, voir le verdict |
+| 7 | **Sondages et swipe logement** | Ajouter des annonces, swiper, voir le verdict |
+| 8 | **Dépenses légères** : nées des décisions (« Qui a payé ? »), ajout en 3 secondes, « Pour être quittes » au retour | Valider un logement, dire qui a payé, voir qui doit quoi |
 | 9 | **Planning** jour par jour | Construire le programme d'un voyage |
 | 10 | **Gérer son voyage** : modifier, quitter, retirer quelqu'un, photo de profil, mises à jour en direct | Changer les infos d'un voyage |
 | 11 | **Finitions et stickers** : animations, célébrations, états vides | La V1 complète |
