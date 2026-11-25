@@ -32,7 +32,7 @@ Les 18–30 ans (étudiants, jeunes actifs, groupes d'amis) qui organisent ensem
 Voylo est une **application sociale et lifestyle qui donne envie de voyager**, pas un outil de productivité. L'expérience doit être fluide, spontanée, chaleureuse et engageante.
 
 ### Contexte
-Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance étape par étape, en testant avec de vrais utilisateurs sur iPhone. Un vrai groupe d'amis, avec un vrai voyage en vue, servira de premier groupe de test.
+Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance étape par étape, en testant avec de vrais utilisateurs sur iPhone. Le premier groupe de test : 4 amis qui préparent un week-end à Amsterdam (destination déjà choisie, date à préciser).
 
 ---
 
@@ -47,7 +47,7 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 | Rôles | Un ou plusieurs organisateurs avec plus de droits. Les autres sont participants. |
 | Dépenses | Calcul de « qui doit combien à qui » uniquement, sans paiement dans l'app. Euros seulement en V1. |
 | Budget par personne | Tout compris : transport, logement, activités, repas et dépenses sur place |
-| Groupe de test | Un vrai groupe d'amis, avec un vrai voyage en vue, testera la V1 |
+| Groupe de test | 4 amis, week-end à Amsterdam, tous sur iPhone. Ils recevront l'app via TestFlight (étape 8). |
 | Langues | Français d'abord, anglais ensuite. Code prévu pour les deux dès le départ. |
 | Hors connexion | Consultation du planning hors ligne en V1. Ajout hors ligne plus tard. |
 | Données | Supabase hébergé en Europe (RGPD) |
@@ -298,5 +298,5 @@ Lance `npm install` en plus quand je te le signale.
 ---
 
 ## 12. Questions ouvertes
-- Le voyage du groupe de test : quand, combien de personnes, destination déjà choisie ou non ? Ça fixera la date cible de la V1.0.
+- La date du week-end à Amsterdam : elle fixera la date cible de la V1.0 et dira si le périmètre doit être resserré.
 - Le nom de domaine (voylo.app, getvoylo.com…) : on décide plus tard, au plus tard à l'étape 8.
