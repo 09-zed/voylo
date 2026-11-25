@@ -5,7 +5,7 @@
 
 Ce document est notre référence pour tout le projet. On le met à jour à chaque décision importante.
 
-- **Statut** : étapes 0 et 1 terminées (projet Expo testé sur iPhone, identité visuelle validée)
+- **Statut** : étapes 0 à 2 terminées (projet Expo, identité visuelle, socle de l'app avec écrans de démo)
 - **Dernière mise à jour** : 25 novembre 2026
 
 ---
@@ -266,7 +266,7 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 |---|---|---|
 | 0 | ✅ **Fondations** : projet Expo, GitHub, Expo Go | L'écran « Voylo — Ça marche ! » |
 | 1 | ✅ **Identité et maquettes** : direction artistique, logo, couleurs, typos, maquettes des écrans clés | Les maquettes en images ou en prototype cliquable |
-| 2 | **Socle de l'app** : navigation, composants de base, traductions, thème | Une navigation entre écrans vides, avec le vrai style Voylo |
+| 2 | ✅ **Socle de l'app** : navigation, composants de base, traductions, thème | Une navigation entre écrans vides, avec le vrai style Voylo |
 | 3 | **Comptes** : projet Supabase, connexion par e-mail, profil express | Créer ton compte et te connecter |
 | 4 | **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre depuis un autre compte |
 | 5 | **Dispos, budget et dates compatibles** | Renseigner tes dispos et voir le calendrier du groupe |
