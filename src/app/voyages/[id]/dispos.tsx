@@ -11,6 +11,7 @@ import { t } from '@/i18n';
 import { useAuth } from '@/lib/auth';
 import { daysUntil, formatEuros, formatRange, toIso } from '@/lib/dates';
 import { BUDGETS, fetchPlanning, saveMyAnswers, VIBES, type MemberAnswers, type Vibe } from '@/lib/planning';
+import { reportError } from '@/lib/report';
 import { fetchTrip, useLoad, type Trip } from '@/lib/trips';
 import { colors, space } from '@/theme';
 
@@ -78,7 +79,8 @@ function AnswersForm({ id, trip, mine }: { id: string; trip: Trip | null; mine: 
         vibes: [...vibes],
       });
       router.back();
-    } catch {
+    } catch (e) {
+      reportError('save answers', e);
       setError(t('errors.generic'));
       setSaving(false);
     }

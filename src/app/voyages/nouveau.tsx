@@ -9,6 +9,7 @@ import { TextField } from '@/components/TextField';
 import { t } from '@/i18n';
 import { COVERS, coverLabel } from '@/lib/covers';
 import { daysUntil, maskDateInput, parseDateInput } from '@/lib/dates';
+import { reportError } from '@/lib/report';
 import { createTrip, type CoverKey } from '@/lib/trips';
 import { colors, radius, space, touchTarget } from '@/theme';
 
@@ -42,7 +43,8 @@ export default function NewTripScreen() {
         periodLabel: isoDate ? null : period.trim() || null,
       });
       router.replace({ pathname: '/voyages/[id]', params: { id, nouveau: '1' } });
-    } catch {
+    } catch (e) {
+      reportError('create trip', e);
       setError(t('errors.generic'));
       setSaving(false);
     }

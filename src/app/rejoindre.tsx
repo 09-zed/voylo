@@ -5,6 +5,7 @@ import { Button } from '@/components/Button';
 import { FormScreen } from '@/components/FormScreen';
 import { TextField } from '@/components/TextField';
 import { t } from '@/i18n';
+import { reportError } from '@/lib/report';
 import { joinTrip } from '@/lib/trips';
 
 /** Normalises what people type into the "VOY-XXXX" format. */
@@ -27,6 +28,7 @@ export default function JoinScreen() {
       const id = await joinTrip(code);
       router.replace({ pathname: '/voyages/[id]', params: { id } });
     } catch (e) {
+      reportError('join trip', e);
       const unknown = (e as Error).message?.includes('unknown_code');
       setError(unknown ? t('join.unknownCode') : t('errors.generic'));
       setJoining(false);

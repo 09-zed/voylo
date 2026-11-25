@@ -2,6 +2,7 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { colors } from '@/theme';
+import { reportError } from './report';
 import { supabase } from './supabase';
 
 export type CoverKey = 'ville' | 'plage' | 'montagne' | 'roadtrip';
@@ -143,6 +144,7 @@ export function useLoad<T>(load: () => Promise<T>) {
       setData(result);
       setError(null);
     } catch (e) {
+      reportError('load', e);
       setError(e as Error);
     } finally {
       setLoading(false);

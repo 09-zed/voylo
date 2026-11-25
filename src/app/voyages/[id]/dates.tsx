@@ -11,6 +11,7 @@ import { t } from '@/i18n';
 import { useAuth } from '@/lib/auth';
 import { formatRange, toIso } from '@/lib/dates';
 import { bestRanges, countByDay, fetchPlanning, fixTripDates, type DateRange } from '@/lib/planning';
+import { reportError } from '@/lib/report';
 import { fetchTrip, useLoad } from '@/lib/trips';
 import { colors, radius, space } from '@/theme';
 
@@ -44,7 +45,8 @@ export default function GroupDatesScreen() {
           try {
             await fixTripDates(id, range.start, range.end);
             router.back();
-          } catch {
+          } catch (e) {
+            reportError('fix dates', e);
             setFixing(null);
             Alert.alert(t('errors.generic'));
           }
