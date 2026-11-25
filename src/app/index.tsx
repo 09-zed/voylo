@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,9 +8,9 @@ import { Button } from '@/components/Button';
 import { BurstDoodle, HeartDoodle, PlaneDoodle, SquiggleDoodle } from '@/components/Doodles';
 import { Highlight } from '@/components/Highlight';
 import { Logo } from '@/components/Logo';
-import { PhotoPlaceholder } from '@/components/PhotoPlaceholder';
 import { Polaroid } from '@/components/Polaroid';
 import { t } from '@/i18n';
+import { photos } from '@/lib/photos';
 import { colors, space } from '@/theme';
 
 export default function WelcomeScreen() {
@@ -28,7 +29,7 @@ export default function WelcomeScreen() {
 
       <View style={styles.photo}>
         <Polaroid>
-          <PhotoPlaceholder label={t('welcome.photoLabel')} color={colors.sunset} style={styles.photoInner} />
+          <Image source={photos.welcome} alt={t('welcome.photoLabel')} style={styles.photoInner} contentFit="cover" />
           <View style={styles.heart}>
             <HeartDoodle />
           </View>
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
   plane: { position: 'absolute', left: 28, top: 196, transform: [{ rotate: '-18deg' }] },
   burst: { position: 'absolute', left: 112, top: 300 },
   photo: { alignSelf: 'flex-end', marginTop: space.l },
-  photoInner: { height: 190 },
+  photoInner: { height: 220, backgroundColor: colors.sunset },
   heart: { position: 'absolute', right: -14, bottom: 8, transform: [{ rotate: '10deg' }] },
   bottom: { marginTop: 'auto' },
   signature: { gap: 6, alignItems: 'flex-start' },

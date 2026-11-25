@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -86,14 +87,14 @@ export default function NewTripScreen() {
                 accessibilityRole="radio"
                 accessibilityState={{ checked: selected }}
                 onPress={() => setCover(c.key)}
-                style={({ pressed }) => [
-                  styles.cover,
-                  { backgroundColor: c.color },
-                  selected && styles.coverSelected,
-                  pressed && styles.pressed,
-                ]}
+                style={({ pressed }) => [styles.cover, selected && styles.coverSelected, pressed && styles.pressed]}
               >
-                <AppText variant="bodyStrong" color={c.textColor} style={styles.coverText}>
+                {c.photo !== undefined ? (
+                  <Image source={c.photo} style={styles.thumb} contentFit="cover" />
+                ) : (
+                  <View style={[styles.thumb, { backgroundColor: c.color }]} />
+                )}
+                <AppText variant="bodyStrong" color={selected ? colors.lime : colors.black} style={styles.coverText}>
                   {coverLabel(c.key)}
                 </AppText>
               </Pressable>
@@ -130,13 +131,16 @@ const styles = StyleSheet.create({
   covers: { flexDirection: 'row', flexWrap: 'wrap', gap: space.s },
   cover: {
     minHeight: touchTarget,
-    paddingHorizontal: space.l,
+    paddingLeft: 6,
+    paddingRight: space.l,
     borderRadius: radius.pill,
-    justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: 'transparent',
+    backgroundColor: colors.surface,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.s,
   },
-  coverSelected: { borderColor: colors.black },
+  coverSelected: { backgroundColor: colors.black },
+  thumb: { width: 32, height: 32, borderRadius: 16 },
   coverText: { fontSize: 15 },
   pressed: { transform: [{ scale: 0.97 }] },
 });

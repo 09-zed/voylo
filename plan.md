@@ -221,7 +221,7 @@ Maquettes de référence : tableau « Voylo — Pistes typo », section « Direc
   - Texte toujours noir sur le lime, le bleu et l'orange. Le lime n'est jamais une couleur de texte sur fond blanc.
   - Une seule touche « sticker » par écran : compte à rebours, photo scotchée ou surlignage, pas les trois.
   - Les vraies photos du groupe passent avant tout le reste.
-- **Photos** : générées par toi à partir des prompts de `docs/prompts-photos.md`, puis rangées dans `assets/photos/`.
+- **Photos** : générées par toi à partir des prompts de `docs/prompts-photos.md`, puis rangées dans `assets/photos/`. Intégrées : accueil, écran vide, couvertures ville, plage et road trip. Manquent : `couverture-amsterdam` et `couverture-montagne` (la montagne garde sa couleur en attendant).
 
 ---
 

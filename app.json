@@ -48,7 +48,8 @@
           }
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-image"
     ],
     "scheme": "voylo",
     "experiments": {

@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -5,10 +6,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { Logo } from '@/components/Logo';
-import { PhotoPlaceholder } from '@/components/PhotoPlaceholder';
 import { TripCard } from '@/components/TripCard';
 import { t } from '@/i18n';
 import { useAuth } from '@/lib/auth';
+import { photos } from '@/lib/photos';
 import { fetchTrips, useLoad } from '@/lib/trips';
 import { colors, radius, space } from '@/theme';
 
@@ -43,7 +44,7 @@ export default function TripsScreen() {
           </View>
         ) : trips && trips.length === 0 ? (
           <View style={styles.empty}>
-            <PhotoPlaceholder label={t('trips.emptyPhotoLabel')} color={colors.sky} style={styles.emptyPhoto} />
+            <Image source={photos.noTrips} alt={t('trips.emptyPhotoLabel')} style={styles.emptyPhoto} contentFit="cover" />
             <AppText variant="title" style={styles.emptyTitle}>
               {t('trips.emptyTitle')}
             </AppText>
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   message: { marginTop: space.xl, gap: space.m, alignItems: 'flex-start' },
   retry: { alignSelf: 'flex-start' },
   empty: { marginTop: space.xl },
-  emptyPhoto: { height: 220, borderRadius: radius.l },
+  emptyPhoto: { height: 240, borderRadius: radius.l, backgroundColor: colors.sky },
   emptyTitle: { marginTop: space.xl, marginBottom: space.s },
   actions: { paddingHorizontal: space.xl, paddingTop: space.m, gap: space.s, backgroundColor: colors.white },
 });

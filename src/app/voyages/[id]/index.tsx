@@ -8,6 +8,7 @@ import { AppText } from '@/components/AppText';
 import { AvatarStack } from '@/components/AvatarStack';
 import { Button } from '@/components/Button';
 import { CountdownSticker } from '@/components/CountdownSticker';
+import { CoverImage } from '@/components/CoverImage';
 import { InviteCard } from '@/components/InviteCard';
 import { t } from '@/i18n';
 import { useAuth } from '@/lib/auth';
@@ -66,7 +67,8 @@ export default function TripScreen() {
       contentContainerStyle={{ paddingBottom: insets.bottom + space.xxl }}
       refreshControl={<RefreshControl refreshing={false} onRefresh={refresh} />}
     >
-      <View style={[styles.hero, { backgroundColor: cover.color, paddingTop: insets.top + space.s }]}>
+      <View style={[styles.hero, { paddingTop: insets.top + space.s }]}>
+        <CoverImage cover={trip.cover} fade style={styles.heroCover} />
         <View style={styles.heroBar}>
           <RoundButton label={t('common.back')} onPress={goBack}>
             <Path d="m15 18-6-6 6-6" />
@@ -251,11 +253,19 @@ const styles = StyleSheet.create({
   heroPlaceholder: { backgroundColor: colors.surface },
   missing: { paddingHorizontal: space.xl, gap: space.l, alignItems: 'flex-start' },
   hero: {
-    minHeight: 280,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
+    minHeight: 320,
     paddingHorizontal: space.xl - 4,
     paddingBottom: 28,
+  },
+  heroCover: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+    overflow: 'hidden',
   },
   heroBar: { flexDirection: 'row', justifyContent: 'space-between' },
   round: {
