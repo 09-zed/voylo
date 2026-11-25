@@ -47,7 +47,7 @@ export default function WelcomeScreen() {
 
         <View style={styles.actions}>
           <Button label={t('welcome.start')} onPress={() => router.push('/connexion')} />
-          <Button label={t('welcome.haveCode')} variant="link" onPress={() => router.push('/rejoindre')} />
+          <Button label={t('welcome.haveCode')} variant="link" onPress={() => router.push('/connexion')} />
         </View>
       </View>
     </View>

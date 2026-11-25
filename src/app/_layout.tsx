@@ -2,7 +2,7 @@ import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
 import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
 import { Montserrat_800ExtraBold } from '@expo-google-fonts/montserrat/800ExtraBold';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { router, Stack, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -35,39 +35,44 @@ export default function RootLayout() {
   );
 }
 
+// Screens reachable while signed out. The welcome screen (index) has no segment.
+const PUBLIC_SCREENS = new Set<string | undefined>([undefined, 'connexion', 'verification']);
+
+/** Replaces the whole history, so the back gesture can't return to a screen that no longer applies. */
+function resetTo(path: '/' | '/profil' | '/voyages') {
+  if (router.canDismiss()) router.dismissAll();
+  router.replace(path);
+}
+
 function RootNavigator() {
   const { loading, session, profile } = useAuth();
+  const segments = useSegments();
+  const current = segments[0] as string | undefined;
 
   useEffect(() => {
     if (!loading) SplashScreen.hideAsync();
   }, [loading]);
 
+  // Sends each person to the right place for their state:
+  // signed out → welcome, no first name yet → profile, otherwise → their trips.
+  // Until Supabase is configured, the demo leaves every screen open.
+  useEffect(() => {
+    if (loading || !supabaseConfigured) return;
+
+    const onPublic = PUBLIC_SCREENS.has(current);
+
+    if (!session) {
+      if (!onPublic) resetTo('/');
+    } else if (!profile) {
+      if (current !== 'profil') resetTo('/profil');
+    } else if (onPublic || current === 'profil') {
+      resetTo('/voyages');
+    }
+  }, [loading, session, profile, current]);
+
   if (loading) {
     return null;
   }
 
-  // Until Supabase is configured, every screen stays reachable so the demo keeps working.
-  const demo = !supabaseConfigured;
-  const signedIn = session !== null;
-
-  return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.white } }}>
-      <Stack.Protected guard={demo || (signedIn && profile !== null)}>
-        <Stack.Screen name="voyages/index" />
-        <Stack.Screen name="voyages/[id]" />
-      </Stack.Protected>
-
-      <Stack.Protected guard={demo || (signedIn && profile === null)}>
-        <Stack.Screen name="profil" />
-      </Stack.Protected>
-
-      <Stack.Protected guard={demo || !signedIn}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="connexion" />
-        <Stack.Screen name="verification" />
-      </Stack.Protected>
-
-      <Stack.Screen name="rejoindre" />
-    </Stack>
-  );
+  return <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.white } }} />;
 }
