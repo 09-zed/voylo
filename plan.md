@@ -5,7 +5,7 @@
 
 Ce document est notre référence pour tout le projet. On le met à jour à chaque décision importante.
 
-- **Statut** : étape 0 terminée (projet Expo installé et testé sur iPhone)
+- **Statut** : étapes 0 et 1 terminées (projet Expo testé sur iPhone, identité visuelle validée)
 - **Dernière mise à jour** : 25 novembre 2026
 
 ---
@@ -52,7 +52,7 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 | Hors connexion | Consultation du planning hors ligne en V1. Ajout hors ligne plus tard. |
 | Données | Supabase hébergé en Europe (RGPD) |
 | IA | Utile pour des recommandations, jamais indispensable au fonctionnement |
-| Identité visuelle | Créée ensemble avant de coder les écrans |
+| Identité visuelle | Validée : stickers et scrapbook, lime / ciel / sunset / noir, Montserrat + Inter (voir section 7) |
 | Photos | Images libres de droits pour l'onboarding et les écrans vides, photos des utilisateurs ensuite |
 | Monétisation | Freemium + pass premium à 9,99 € par voyage pour tout le groupe. **Pas en V1.** |
 
@@ -200,13 +200,28 @@ On s'inspire de l'esprit de ces références, sans copier leurs écrans :
 - Le look « outil de gestion de projet » : tableaux, listes austères.
 - Le jargon.
 
-### Livrables à créer (étape 1)
-- Logo et icône de l'app
-- Palette de couleurs (clair et sombre)
-- Typographies
-- Style d'illustration et de photo
-- Composants de base (boutons, cartes, champs, avatars, badges)
-- Maquettes des écrans clés de la V1.0
+### Identité validée (étape 1)
+Maquettes de référence : tableau « Voylo — Pistes typo », section « Direction Voylo ».
+
+- **Style** : énergique, stickers et scrapbook. Photos scotchées façon polaroid, surlignages lime légèrement inclinés, doodles dessinés à la main (avion, cœur, traits d'énergie).
+- **Logo** : « voylo. » en minuscules, avec le point, en Montserrat ExtraBold noir, avec un contour blanc façon sticker.
+- **Icône de l'app** : « v. » noir sur fond lime, coins arrondis.
+- **Palette** :
+
+| Nom | Valeur | Usage |
+|---|---|---|
+| Lime | `#C7FF00` | Actions, mises en avant, surlignage |
+| Ciel | `#6EC6FF` | Évasion, grands fonds |
+| Sunset | `#FF7A00` | Stickers, rappels, doodles |
+| Noir | `#000000` | Texte, boutons principaux |
+| Blanc | `#FFFFFF` | Fonds d'écran, cadres photo |
+
+- **Typographie** : Montserrat ExtraBold pour les titres, Inter pour les textes et l'interface.
+- **Règles** :
+  - Texte toujours noir sur le lime, le bleu et l'orange. Le lime n'est jamais une couleur de texte sur fond blanc.
+  - Une seule touche « sticker » par écran : compte à rebours, photo scotchée ou surlignage, pas les trois.
+  - Les vraies photos du groupe passent avant tout le reste.
+- **Photos** : générées par toi à partir des prompts de `docs/prompts-photos.md`, puis rangées dans `assets/photos/`.
 
 ---
 
@@ -250,7 +265,7 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 | # | Étape | Ce que tu testes |
 |---|---|---|
 | 0 | ✅ **Fondations** : projet Expo, GitHub, Expo Go | L'écran « Voylo — Ça marche ! » |
-| 1 | **Identité et maquettes** : direction artistique, logo, couleurs, typos, maquettes des écrans V1.0 | Les maquettes en images ou en prototype cliquable |
+| 1 | ✅ **Identité et maquettes** : direction artistique, logo, couleurs, typos, maquettes des écrans clés | Les maquettes en images ou en prototype cliquable |
 | 2 | **Socle de l'app** : navigation, composants de base, traductions, thème | Une navigation entre écrans vides, avec le vrai style Voylo |
 | 3 | **Comptes** : projet Supabase, connexion par e-mail, profil express | Créer ton compte et te connecter |
 | 4 | **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre depuis un autre compte |
