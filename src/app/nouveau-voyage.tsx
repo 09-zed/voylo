@@ -43,7 +43,7 @@ export default function NewTripScreen() {
         startDate: isoDate,
         periodLabel: isoDate ? null : period.trim() || null,
       });
-      router.replace({ pathname: '/voyages/[id]', params: { id, nouveau: '1' } });
+      router.replace({ pathname: '/voyage/[id]/inviter', params: { id } });
     } catch (e) {
       reportError('create trip', e);
       setError(t('errors.generic'));

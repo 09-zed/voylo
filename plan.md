@@ -5,7 +5,7 @@
 
 Ce document est notre référence pour tout le projet. On le met à jour à chaque décision importante.
 
-- **Statut** : étapes 0 à 5 terminées. Maquettes de toute l'app validées (nouvelle navigation, onglets du voyage, swipe logement). Prochaine étape : la nouvelle navigation.
+- **Statut** : étapes 0 à 5 terminées, maquettes de toute l'app validées. Étape 6 (nouvelle navigation) codée, en test.
 - **Maquettes de référence** : tableau « Voylo — Maquettes de l'app » (https://claude.ai/artifact/3Rrk1EXcxvN3G4TWPgsg1N)
 - **Dernière mise à jour** : 25 novembre 2026 (maquettes de toute l'app, swipe logement)
 

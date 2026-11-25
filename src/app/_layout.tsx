@@ -39,7 +39,7 @@ export default function RootLayout() {
 const PUBLIC_SCREENS = new Set<string | undefined>([undefined, 'connexion', 'verification']);
 
 /** Replaces the whole history, so the back gesture can't return to a screen that no longer applies. */
-function resetTo(path: '/' | '/profil' | '/voyages') {
+function resetTo(path: '/' | '/prenom' | '/accueil') {
   if (router.canDismiss()) router.dismissAll();
   router.replace(path);
 }
@@ -54,7 +54,7 @@ function RootNavigator() {
   }, [loading]);
 
   // Sends each person to the right place for their state:
-  // signed out → welcome, no first name yet → profile, otherwise → their trips.
+  // signed out → welcome, no first name yet → first name, otherwise → home tab.
   // Without Supabase settings (missing .env), there is nothing to sign in to: leave the screens open.
   useEffect(() => {
     if (loading || !supabaseConfigured) return;
@@ -64,9 +64,9 @@ function RootNavigator() {
     if (!session) {
       if (!onPublic) resetTo('/');
     } else if (!profile) {
-      if (current !== 'profil') resetTo('/profil');
-    } else if (onPublic || current === 'profil') {
-      resetTo('/voyages');
+      if (current !== 'prenom') resetTo('/prenom');
+    } else if (onPublic || current === 'prenom') {
+      resetTo('/accueil');
     }
   }, [loading, session, profile, current]);
 

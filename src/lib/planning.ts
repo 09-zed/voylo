@@ -87,3 +87,13 @@ export function hasAnswered(answers: MemberAnswers | undefined) {
 }
 
 export { bestRanges, countByDay, groupBudget, type DateRange } from './planningMath';
+
+/** Trips where the signed-in person has already shared availability or a budget. */
+export async function fetchMyAnsweredTripIds(userId: string) {
+  const { data, error } = await supabase
+    .from('member_preferences')
+    .select('trip_id, availability_set, budget_min')
+    .eq('user_id', userId);
+  if (error) throw error;
+  return new Set(data.filter((row) => row.availability_set || row.budget_min !== null).map((row) => row.trip_id as string));
+}

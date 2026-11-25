@@ -162,3 +162,9 @@ export function useLoad<T>(load: () => Promise<T>) {
 
   return { data, error, loading, refresh };
 }
+
+/** A trip is over once its last day (or its only known day) is before today. */
+export function isPastTrip(trip: Trip, todayIso: string) {
+  const last = trip.endDate ?? trip.startDate;
+  return last !== null && last < todayIso;
+}

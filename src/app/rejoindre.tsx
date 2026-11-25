@@ -26,7 +26,7 @@ export default function JoinScreen() {
     setError(null);
     try {
       const id = await joinTrip(code);
-      router.replace({ pathname: '/voyages/[id]', params: { id } });
+      router.replace({ pathname: '/voyage/[id]', params: { id } });
     } catch (e) {
       reportError('join trip', e);
       const unknown = (e as Error).message?.includes('unknown_code');

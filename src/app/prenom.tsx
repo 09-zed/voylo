@@ -20,7 +20,7 @@ export default function ProfileScreen() {
     setError(null);
     const failure = await saveFirstName(firstName);
     setSaving(false);
-    // On success the navigator opens "Mes voyages" by itself (see _layout.tsx).
+    // On success the navigator opens the home tab by itself (see _layout.tsx).
     if (failure) setError(friendlyAuthError(failure));
   };
 

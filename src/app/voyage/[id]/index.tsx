@@ -10,16 +10,21 @@ import { Button } from '@/components/Button';
 import { CountdownSticker } from '@/components/CountdownSticker';
 import { CoverImage } from '@/components/CoverImage';
 import { InviteCard } from '@/components/InviteCard';
+import { ComingSoon } from '@/components/trip/ComingSoon';
+import { GroupDates } from '@/components/trip/GroupDates';
+import { isTripTab, TripTabs, type TripTab } from '@/components/trip/TripTabs';
 import { t } from '@/i18n';
 import { useAuth } from '@/lib/auth';
 import { coverFor } from '@/lib/covers';
 import { daysUntil, formatDay, formatEuros, formatRange } from '@/lib/dates';
-import { bestRanges, countByDay, fetchPlanning, groupBudget, hasAnswered, type Planning } from '@/lib/planning';
+import { fetchPlanning, groupBudget, hasAnswered, type Planning } from '@/lib/planning';
 import { fetchTrip, useLoad, type Trip } from '@/lib/trips';
-import { colors, radius, space, touchTarget } from '@/theme';
+import { colors, fonts, radius, space, touchTarget } from '@/theme';
 
 export default function TripScreen() {
-  const { id, nouveau } = useLocalSearchParams<{ id: string; nouveau?: string }>();
+  const params = useLocalSearchParams<{ id: string; onglet?: string }>();
+  const id = params.id;
+  const tab: TripTab = isTripTab(params.onglet) ? params.onglet : 'apercu';
   const insets = useSafeAreaInsets();
   const { session } = useAuth();
   const me = session?.user.id ?? '';
@@ -29,9 +34,10 @@ export default function TripScreen() {
   });
 
   const goBack = () => (router.canGoBack() ? router.back() : router.replace('/voyages'));
+  const setTab = (next: TripTab) => router.setParams({ onglet: next });
 
   if (loading && !data) {
-    return <View style={[styles.screen, styles.heroPlaceholder]} />;
+    return <View style={[styles.screen, styles.placeholder]} />;
   }
 
   const trip = data?.trip;
@@ -48,7 +54,7 @@ export default function TripScreen() {
   const cover = coverFor(trip.cover);
   const days = trip.startDate ? daysUntil(trip.startDate) : null;
   const solo = trip.members.length === 1;
-  const inviteFirst = nouveau === '1' || solo;
+  const isOrganizer = trip.members.some((m) => m.userId === me && m.role === 'organisateur');
   const share = () => Share.share({ message: t('trip.shareMessage', { name: trip.name, code: trip.inviteCode }) });
 
   const when = trip.startDate
@@ -58,8 +64,6 @@ export default function TripScreen() {
         ? formatRange(trip.startDate, trip.endDate)
         : t('trip.departure', { date: formatDay(trip.startDate) })
     : (trip.periodLabel ?? t('trips.noDate'));
-
-  const invite = <InviteCard tripName={trip.name} code={trip.inviteCode} solo={solo} />;
 
   return (
     <ScrollView
@@ -94,102 +98,97 @@ export default function TripScreen() {
       </View>
 
       <Members trip={trip} />
+      <TripTabs active={tab} onChange={setTab} />
 
-      <View style={styles.sections}>
-        {inviteFirst && invite}
-
-        <MyAnswersCard tripId={trip.id} done={hasAnswered(planning.get(me))} />
-        {!trip.startDate && <GroupDatesCard trip={trip} planning={planning} />}
-        <BudgetCard trip={trip} planning={planning} />
-        {!solo && <WaitingCard trip={trip} planning={planning} me={me} />}
-
-        <View style={styles.next}>
-          <AppText variant="title">{t('trip.nextTitle')}</AppText>
-          {[t('trip.nextPolls'), t('trip.nextExpenses')].map((label) => (
-            <View key={label} style={styles.nextRow}>
-              <View style={styles.dot} />
-              <AppText style={styles.cardText}>{label}</AppText>
-            </View>
-          ))}
-        </View>
-
-        {!inviteFirst && invite}
+      <View style={styles.body}>
+        {tab === 'apercu' && (
+          <Overview trip={trip} planning={planning} me={me} solo={solo} onOpen={setTab} />
+        )}
+        {tab === 'dates' && <GroupDates trip={trip} planning={planning} isOrganizer={isOrganizer} onChanged={refresh} />}
+        {tab === 'sondages' && <ComingSoon title={t('soon.sondagesTitle')} text={t('soon.sondagesText')} sticker="coeur" />}
+        {tab === 'planning' && <ComingSoon title={t('soon.planningTitle')} text={t('soon.planningText')} sticker="pin" />}
+        {tab === 'depenses' && <ComingSoon title={t('soon.depensesTitle')} text={t('soon.depensesText')} sticker="billet" />}
       </View>
     </ScrollView>
   );
 }
 
-function MyAnswersCard({ tripId, done }: { tripId: string; done: boolean }) {
-  return (
-    <View style={[styles.card, { backgroundColor: done ? colors.surface : colors.sunsetTint }]}>
-      <View style={styles.cardBody}>
-        <AppText variant="bodyStrong">{t('planning.answersTitle')}</AppText>
-        <AppText style={styles.cardText}>{done ? t('planning.answersDone') : t('planning.answersTodo')}</AppText>
-      </View>
-      <Button
-        label={done ? t('planning.edit') : t('planning.fill')}
-        variant="small"
-        onPress={() => router.push({ pathname: '/voyages/[id]/dispos', params: { id: tripId } })}
-      />
-    </View>
-  );
-}
-
-function GroupDatesCard({ trip, planning }: { trip: Trip; planning: Planning }) {
-  const best = bestRanges(countByDay(planning), 1, Math.ceil(trip.members.length / 2))[0];
-  return (
-    <View style={[styles.card, styles.column, { backgroundColor: colors.skyTint }]}>
-      <AppText variant="bodyStrong">{t('planning.datesTitle')}</AppText>
-      <AppText style={styles.cardText}>
-        {best
-          ? t('planning.datesBest', {
-              range: formatRange(best.start, best.end),
-              count: best.available,
-              total: trip.members.length,
-            })
-          : t('planning.datesEmpty')}
-      </AppText>
-      <Button
-        label={t('planning.seeCalendar')}
-        variant="small"
-        style={styles.alignStart}
-        onPress={() => router.push({ pathname: '/voyages/[id]/dates', params: { id: trip.id } })}
-      />
-    </View>
-  );
-}
-
-function BudgetCard({ trip, planning }: { trip: Trip; planning: Planning }) {
+function Overview({ trip, planning, me, solo, onOpen }: { trip: Trip; planning: Planning; me: string; solo: boolean; onOpen: (tab: TripTab) => void }) {
+  const done = hasAnswered(planning.get(me));
   const budget = groupBudget(planning);
-  if (!budget) return null;
-  const open = !Number.isFinite(budget.max);
-  const values = { min: formatEuros(budget.min), max: open ? '' : formatEuros(budget.max) };
-  const text = budget.common
-    ? open
-      ? t('planning.budgetCommonOpen', values)
+  const budgetText = budget
+    ? !Number.isFinite(budget.max)
+      ? `${formatEuros(budget.min)} +`
       : budget.min === budget.max
-        ? t('planning.budgetCommonExact', values)
-        : t('planning.budgetCommon', values)
-    : open
-      ? t('planning.budgetSpreadOpen', values)
-      : t('planning.budgetSpread', values);
+        ? formatEuros(budget.min)
+        : `${formatEuros(budget.min)} – ${formatEuros(budget.max)}`
+    : null;
 
   return (
-    <View style={[styles.card, styles.column, { backgroundColor: colors.black }]}>
-      <AppText variant="bodyStrong" color={colors.lime}>
-        {t('planning.budgetTitle')}
-      </AppText>
-      <AppText color={colors.white} style={styles.cardText}>
-        {text}
-      </AppText>
-      <AppText variant="caption" color="rgba(255, 255, 255, 0.75)">
-        {t('planning.budgetAnswered', { count: budget.answered, total: trip.members.length })}
-      </AppText>
+    <View style={styles.overview}>
+      {solo && <InviteCard tripName={trip.name} code={trip.inviteCode} solo />}
+
+      <View style={[styles.card, { backgroundColor: done ? colors.surface : colors.sunsetTint }]}>
+        <View style={styles.cardBody}>
+          <AppText variant="bodyStrong">{t('planning.answersTitle')}</AppText>
+          <AppText style={styles.cardText}>{done ? t('planning.answersDone') : t('planning.answersTodo')}</AppText>
+        </View>
+        <Button
+          label={done ? t('planning.edit') : t('planning.fill')}
+          variant="small"
+          onPress={() => router.push({ pathname: '/voyage/[id]/dispos', params: { id: trip.id } })}
+        />
+      </View>
+
+      <View style={styles.tiles}>
+        <Tile
+          label={t('overview.datesTile')}
+          value={trip.startDate ? formatRange(trip.startDate, trip.endDate ?? trip.startDate) : t('overview.datesTodo')}
+          foot={trip.startDate ? t('overview.datesFixed') : ''}
+          background={colors.skyTint}
+          onPress={() => onOpen('dates')}
+        />
+        <Tile
+          label={t('overview.budgetTile')}
+          value={budgetText ?? t('overview.budgetNone')}
+          foot={budget ? t('overview.answered', { count: budget.answered, total: trip.members.length }) : ''}
+          background={colors.black}
+          dark
+          onPress={() => onOpen('dates')}
+        />
+        <Tile label={t('overview.pollsTile')} value={t('overview.soon')} background={colors.surface} onPress={() => onOpen('sondages')} />
+        <Tile label={t('overview.expensesTile')} value={t('overview.soon')} background={colors.lime} onPress={() => onOpen('depenses')} />
+      </View>
+
+      {!solo && <Waiting trip={trip} planning={planning} me={me} />}
     </View>
   );
 }
 
-function WaitingCard({ trip, planning, me }: { trip: Trip; planning: Planning; me: string }) {
+function Tile({ label, value, foot = '', background, dark = false, onPress }: { label: string; value: string; foot?: string; background: string; dark?: boolean; onPress: () => void }) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${label}, ${value}${foot ? `, ${foot}` : ''}`}
+      onPress={onPress}
+      style={({ pressed }) => [styles.tile, { backgroundColor: background }, pressed && styles.pressed]}
+    >
+      <AppText variant="caption" color={dark ? colors.lime : colors.textMuted}>
+        {label}
+      </AppText>
+      <AppText style={styles.tileValue} color={dark ? colors.white : colors.black}>
+        {value}
+      </AppText>
+      {foot ? (
+        <AppText variant="caption" color={dark ? colors.white : colors.black} style={styles.tileFoot}>
+          {foot}
+        </AppText>
+      ) : null}
+    </Pressable>
+  );
+}
+
+function Waiting({ trip, planning, me }: { trip: Trip; planning: Planning; me: string }) {
   const waiting = trip.members.filter((m) => m.userId !== me && !hasAnswered(planning.get(m.userId)));
   const remind = () => Share.share({ message: t('planning.remindMessage', { name: trip.name }) });
 
@@ -214,8 +213,7 @@ function WaitingCard({ trip, planning, me }: { trip: Trip; planning: Planning; m
 
 function Members({ trip }: { trip: Trip }) {
   const names = trip.members.map((m) => m.firstName);
-  const label =
-    names.length > 1 ? `${names.slice(0, -1).join(', ')} ${t('common.and')} ${names.at(-1)}` : (names[0] ?? '');
+  const label = names.length > 1 ? `${names.slice(0, -1).join(', ')} ${t('common.and')} ${names.at(-1)}` : (names[0] ?? '');
   const organizers = trip.members.filter((m) => m.role === 'organisateur').map((m) => m.firstName);
 
   return (
@@ -235,12 +233,7 @@ function Members({ trip }: { trip: Trip }) {
 
 function RoundButton({ label, onPress, children }: { label: string; onPress: () => void; children: ReactNode }) {
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={onPress}
-      style={({ pressed }) => [styles.round, pressed && styles.pressed]}
-    >
+    <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={({ pressed }) => [styles.round, pressed && styles.pressed]}>
       <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
         {children}
       </Svg>
@@ -250,13 +243,9 @@ function RoundButton({ label, onPress, children }: { label: string; onPress: () 
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.white },
-  heroPlaceholder: { backgroundColor: colors.surface },
+  placeholder: { backgroundColor: colors.surface },
   missing: { paddingHorizontal: space.xl, gap: space.l, alignItems: 'flex-start' },
-  hero: {
-    minHeight: 320,
-    paddingHorizontal: space.xl - 4,
-    paddingBottom: 28,
-  },
+  hero: { minHeight: 300, paddingHorizontal: space.xl - 4, paddingBottom: 28 },
   heroCover: {
     position: 'absolute',
     top: 0,
@@ -268,35 +257,21 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   heroBar: { flexDirection: 'row', justifyContent: 'space-between' },
-  round: {
-    width: touchTarget,
-    height: touchTarget,
-    borderRadius: radius.pill,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  round: { width: touchTarget, height: touchTarget, borderRadius: radius.pill, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   pressed: { transform: [{ scale: 0.97 }] },
-  heroTitle: { marginTop: 'auto', paddingTop: space.xxl, fontSize: 40, lineHeight: 45 },
-  when: { maxWidth: 190 },
+  heroTitle: { marginTop: 'auto', paddingTop: space.xxl, fontSize: 36, lineHeight: 40, maxWidth: 260 },
+  when: { maxWidth: 190, marginTop: space.xs },
   countdown: { position: 'absolute', right: 18, bottom: -34 },
-  group: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.m,
-    paddingHorizontal: space.xl - 4,
-    paddingTop: space.xl,
-    paddingRight: 130,
-  },
+  group: { flexDirection: 'row', alignItems: 'center', gap: space.m, paddingHorizontal: space.xl - 4, paddingTop: space.xl, paddingRight: 130 },
   groupText: { flexShrink: 1 },
   groupNames: { fontSize: 15, lineHeight: 21 },
-  sections: { paddingHorizontal: space.xl - 4, paddingTop: space.xl, gap: space.m },
+  body: { paddingHorizontal: space.xl - 4 },
+  overview: { gap: space.m },
   card: { borderRadius: radius.m, padding: space.l, flexDirection: 'row', alignItems: 'center', gap: space.m },
-  column: { flexDirection: 'column', alignItems: 'stretch', gap: space.s },
   cardBody: { flex: 1, gap: 2 },
   cardText: { fontSize: 15, lineHeight: 21 },
-  alignStart: { alignSelf: 'flex-start', marginTop: space.xs },
-  next: { backgroundColor: colors.surface, borderRadius: radius.m, padding: space.xl, gap: space.m, marginTop: space.s },
-  nextRow: { flexDirection: 'row', alignItems: 'center', gap: space.m },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.sunset },
+  tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: space.m },
+  tile: { width: '47.5%', flexGrow: 1, minHeight: 120, borderRadius: radius.m, padding: space.l, gap: 6 },
+  tileValue: { fontFamily: fonts.display, fontSize: 18, lineHeight: 22 },
+  tileFoot: { marginTop: 'auto' },
 });

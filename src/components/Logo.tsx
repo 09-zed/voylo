@@ -1,56 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 
-import { colors, fonts } from '@/theme';
+import { logoOnLimeXml, logoXml } from './logoXml';
 
-const OUTLINE_STEPS = 16;
+// The logo's drawing is 1495 × 891.
+const RATIO = 891 / 1495;
 
-/**
- * The "voylo." wordmark with its white sticker outline.
- * React Native has no text stroke, so the outline is drawn by
- * layering white copies of the word in a circle behind the black one.
- */
-export function Logo({ size = 56 }: { size?: number }) {
-  const outline = Math.max(2, Math.round(size * 0.08));
-  const textStyle = {
-    fontFamily: fonts.display,
-    fontSize: size,
-    lineHeight: Math.round(size * 1.2),
-    letterSpacing: -size * 0.03,
-  };
+type Props = {
+  width?: number;
+  /** Use on lime backgrounds, where the lime swoosh would disappear. */
+  onLime?: boolean;
+};
 
+/** The Voylo logo drawn by the founder (assets/logo/voylo-logo.svg). */
+export function Logo({ width = 96, onLime = false }: Props) {
   return (
-    <View
-      accessible
-      accessibilityRole="header"
-      accessibilityLabel="Voylo"
-      style={[styles.wrap, { padding: outline }]}
-    >
-      {Array.from({ length: OUTLINE_STEPS }, (_, i) => {
-        const angle = (i / OUTLINE_STEPS) * 2 * Math.PI;
-        return (
-          <Text
-            key={i}
-            importantForAccessibility="no"
-            accessibilityElementsHidden
-            style={[
-              textStyle,
-              styles.copy,
-              {
-                left: outline + Math.cos(angle) * outline,
-                top: outline + Math.sin(angle) * outline,
-              },
-            ]}
-          >
-            voylo.
-          </Text>
-        );
-      })}
-      <Text style={[textStyle, { color: colors.black }]}>voylo.</Text>
+    <View accessible accessibilityRole="image" accessibilityLabel="Voylo" style={{ width, height: width * RATIO }}>
+      <SvgXml xml={onLime ? logoOnLimeXml : logoXml} width={width} height={width * RATIO} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  wrap: { alignSelf: 'flex-start' },
-  copy: { position: 'absolute', color: colors.white },
-});
