@@ -251,7 +251,7 @@ Maquettes de référence : tableau « Voylo — Pistes typo », section « Direc
   - Texte toujours noir sur le lime, le bleu et l'orange. Le lime n'est jamais une couleur de texte sur fond blanc.
   - Un sticker « vedette » par écran, plus un ou deux petits au maximum. Jamais de sticker sur les écrans de chiffres (dépenses) ni dans les formulaires.
   - Les vraies photos du groupe passent avant tout le reste.
-- **Stickers** : vrais stickers découpés (gros contour blanc, couleurs de la palette), générés par toi avec GPT à partir des prompts donnés le 25 novembre 2026 : avion, globe, cœur, valise, billet, polaroid, pin, soleil, palmier, montagne, éclat, peace, et 3 stickers texte (« C'est parti ! », « Entre potes », « On part ! »). À intégrer d'abord dans les maquettes, puis dans l'app. Emplacements visés : moments forts (accueil, invitation, dates fixées, match, rétro), écrans vides, en débordement sur les grandes photos.
+- **Stickers** : vrais stickers découpés (gros contour blanc, couleurs de la palette), générés par toi avec GPT à partir des prompts donnés le 25 novembre 2026 : avion, globe, cœur, valise, billet, polaroid, pin, soleil, palmier, montagne, éclat, peace, et 3 stickers texte (« C'est parti ! », « Entre potes », « On part ! »). Les 15 sont reçus, recadrés et rangés dans `assets/stickers/`, et placés sur les maquettes (Accueil, Voyages, Profil, Dates, Planning, Inviter, Swipe, Match). Emplacements visés : moments forts (accueil, invitation, dates fixées, match, rétro), écrans vides, en débordement sur les grandes photos.
 - **Photos** : générées par toi à partir des prompts de `docs/prompts-photos.md`, puis rangées dans `assets/photos/`. Toutes intégrées : accueil, écran vide, et les 5 ambiances (Ville, Ville en hiver avec les canaux d'Amsterdam, Plage, Montagne, Road trip).
 
 ---
@@ -370,5 +370,4 @@ Lance `npm install` en plus quand `git pull` affiche `package.json` dans les fic
 ## 12. Questions ouvertes
 - L'ordre des étapes 7 à 12, selon ce qui doit être prêt pour le week-end à Amsterdam du 30 décembre.
 - Le nom de domaine (voylo.app, getvoylo.com…) : au plus tard à l'étape 12.
-- Les stickers : en cours de génération de ton côté.
 - Étendre le swipe aux activités et aux restos ?
