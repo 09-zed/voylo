@@ -22,6 +22,7 @@ export type Trip = {
   cover: CoverKey | null;
   periodLabel: string | null;
   startDate: string | null;
+  endDate: string | null;
   status: TripStatus;
   inviteCode: string;
   members: TripMember[];
@@ -33,6 +34,7 @@ type TripRow = {
   cover: CoverKey | null;
   period_label: string | null;
   start_date: string | null;
+  end_date: string | null;
   status: TripStatus;
   invite_code: string;
   trip_members: {
@@ -44,7 +46,7 @@ type TripRow = {
 };
 
 const TRIP_FIELDS =
-  'id, name, cover, period_label, start_date, status, invite_code, trip_members(user_id, role, joined_at, profiles(first_name, avatar_url))';
+  'id, name, cover, period_label, start_date, end_date, status, invite_code, trip_members(user_id, role, joined_at, profiles(first_name, avatar_url))';
 
 const AVATAR_COLORS = [colors.sunset, colors.sky, colors.lime, colors.black];
 
@@ -72,6 +74,7 @@ function toTrip(row: TripRow): Trip {
     cover: row.cover,
     periodLabel: row.period_label,
     startDate: row.start_date,
+    endDate: row.end_date,
     status: row.status,
     inviteCode: row.invite_code,
     members,

@@ -9,6 +9,7 @@ export const colors = {
 
   // Soft tints for cards (black text stays readable on all of them).
   skyTint: '#EAF6FF',
+  limeTint: '#ECFFA3',
   sunsetTint: '#FFE7D1',
   surface: '#F3F5F7',
 

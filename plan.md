@@ -5,7 +5,7 @@
 
 Ce document est notre référence pour tout le projet. On le met à jour à chaque décision importante.
 
-- **Statut** : étapes 0 à 3 terminées, étape 4 (voyages et invitations) codée, en test
+- **Statut** : étapes 0 à 4 terminées, étape 5 (dispos, budget, dates compatibles) codée, en test
 - **Dernière mise à jour** : 25 novembre 2026
 
 ---
@@ -269,7 +269,7 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 | 1 | ✅ **Identité et maquettes** : direction artistique, logo, couleurs, typos, maquettes des écrans clés | Les maquettes en images ou en prototype cliquable |
 | 2 | ✅ **Socle de l'app** : navigation, composants de base, traductions, thème | Une navigation entre écrans vides, avec le vrai style Voylo |
 | 3 | ✅ **Comptes** : projet Supabase, connexion par code e-mail, profil express | Créer ton compte et te connecter |
-| 4 | **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre depuis un autre compte |
+| 4 | ✅ **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre depuis un autre compte |
 | 5 | **Dispos, budget et dates compatibles** | Renseigner tes dispos et voir le calendrier du groupe |
 | 6 | **Sondages** | Créer un sondage, voter, clôturer |
 | 7 | **Compte à rebours et finitions de la V1.0** : animations, états vides, erreurs | La V1.0 complète |

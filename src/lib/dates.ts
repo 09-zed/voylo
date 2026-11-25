@@ -45,3 +45,36 @@ export function parseDateInput(input: string) {
   if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) return null;
   return `${match[3]}-${match[2]}-${match[1]}`;
 }
+
+/** Local date → "YYYY-MM-DD". */
+export function toIso(date: Date) {
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${date.getFullYear()}-${m}-${d}`;
+}
+
+/** "juillet 2027" / "July 2027" */
+export function formatMonth(year: number, month: number) {
+  return new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fr-FR', { month: 'long', year: 'numeric' }).format(
+    new Date(year, month, 1),
+  );
+}
+
+/** "12 – 16 juillet", "30 déc. – 3 janv." or just "12 juillet" for a single day. */
+export function formatRange(startIso: string, endIso: string) {
+  const fmt = (iso: string, opts: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fr-FR', opts).format(parseDay(iso));
+  if (startIso === endIso) return fmt(startIso, { day: 'numeric', month: 'long' });
+  const sameMonth = startIso.slice(0, 7) === endIso.slice(0, 7);
+  if (sameMonth) return `${fmt(startIso, { day: 'numeric' })} – ${fmt(endIso, { day: 'numeric', month: 'long' })}`;
+  return `${fmt(startIso, { day: 'numeric', month: 'short' })} – ${fmt(endIso, { day: 'numeric', month: 'short' })}`;
+}
+
+/** Whole euros, no cents: "450 €". */
+export function formatEuros(amount: number) {
+  return new Intl.NumberFormat(locale === 'en' ? 'en-GB' : 'fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}

@@ -10,23 +10,31 @@ import { Button } from '@/components/Button';
 import { CountdownSticker } from '@/components/CountdownSticker';
 import { InviteCard } from '@/components/InviteCard';
 import { t } from '@/i18n';
+import { useAuth } from '@/lib/auth';
 import { coverFor } from '@/lib/covers';
-import { daysUntil, formatDay } from '@/lib/dates';
+import { daysUntil, formatDay, formatEuros, formatRange } from '@/lib/dates';
+import { bestRanges, countByDay, fetchPlanning, groupBudget, hasAnswered, type Planning } from '@/lib/planning';
 import { fetchTrip, useLoad, type Trip } from '@/lib/trips';
 import { colors, radius, space, touchTarget } from '@/theme';
 
 export default function TripScreen() {
   const { id, nouveau } = useLocalSearchParams<{ id: string; nouveau?: string }>();
   const insets = useSafeAreaInsets();
-  const { data: trip, error, loading, refresh } = useLoad(() => fetchTrip(id));
+  const { session } = useAuth();
+  const me = session?.user.id ?? '';
+  const { data, error, loading, refresh } = useLoad(async () => {
+    const [trip, planning] = await Promise.all([fetchTrip(id), fetchPlanning(id)]);
+    return { trip, planning };
+  });
 
   const goBack = () => (router.canGoBack() ? router.back() : router.replace('/voyages'));
 
-  if (loading && !trip) {
+  if (loading && !data) {
     return <View style={[styles.screen, styles.heroPlaceholder]} />;
   }
 
-  if (!trip) {
+  const trip = data?.trip;
+  if (!trip || !data) {
     return (
       <View style={[styles.screen, styles.missing, { paddingTop: insets.top + space.xxl }]}>
         <AppText>{error ? t('errors.generic') : t('errors.tripNotFound')}</AppText>
@@ -35,11 +43,20 @@ export default function TripScreen() {
     );
   }
 
+  const { planning } = data;
   const cover = coverFor(trip.cover);
   const days = trip.startDate ? daysUntil(trip.startDate) : null;
   const solo = trip.members.length === 1;
   const inviteFirst = nouveau === '1' || solo;
   const share = () => Share.share({ message: t('trip.shareMessage', { name: trip.name, code: trip.inviteCode }) });
+
+  const when = trip.startDate
+    ? days === 0
+      ? t('trip.today')
+      : trip.endDate && trip.endDate !== trip.startDate
+        ? formatRange(trip.startDate, trip.endDate)
+        : t('trip.departure', { date: formatDay(trip.startDate) })
+    : (trip.periodLabel ?? t('trips.noDate'));
 
   const invite = <InviteCard tripName={trip.name} code={trip.inviteCode} solo={solo} />;
 
@@ -65,11 +82,7 @@ export default function TripScreen() {
           {trip.name}
         </AppText>
         <AppText variant="bodyStrong" color={cover.textColor} style={styles.when}>
-          {trip.startDate
-            ? days === 0
-              ? t('trip.today')
-              : t('trip.departure', { date: formatDay(trip.startDate) })
-            : (trip.periodLabel ?? t('trips.noDate'))}
+          {when}
         </AppText>
         {days !== null && days > 0 && (
           <View style={styles.countdown}>
@@ -83,12 +96,17 @@ export default function TripScreen() {
       <View style={styles.sections}>
         {inviteFirst && invite}
 
+        <MyAnswersCard tripId={trip.id} done={hasAnswered(planning.get(me))} />
+        {!trip.startDate && !solo && <GroupDatesCard trip={trip} planning={planning} />}
+        <BudgetCard trip={trip} planning={planning} />
+        {!solo && <WaitingCard trip={trip} planning={planning} me={me} />}
+
         <View style={styles.next}>
           <AppText variant="title">{t('trip.nextTitle')}</AppText>
-          {[t('trip.nextDates'), t('trip.nextPolls'), t('trip.nextExpenses')].map((label) => (
+          {[t('trip.nextPolls'), t('trip.nextExpenses')].map((label) => (
             <View key={label} style={styles.nextRow}>
               <View style={styles.dot} />
-              <AppText style={styles.nextText}>{label}</AppText>
+              <AppText style={styles.cardText}>{label}</AppText>
             </View>
           ))}
         </View>
@@ -96,6 +114,99 @@ export default function TripScreen() {
         {!inviteFirst && invite}
       </View>
     </ScrollView>
+  );
+}
+
+function MyAnswersCard({ tripId, done }: { tripId: string; done: boolean }) {
+  return (
+    <View style={[styles.card, { backgroundColor: done ? colors.surface : colors.sunsetTint }]}>
+      <View style={styles.cardBody}>
+        <AppText variant="bodyStrong">{t('planning.answersTitle')}</AppText>
+        <AppText style={styles.cardText}>{done ? t('planning.answersDone') : t('planning.answersTodo')}</AppText>
+      </View>
+      <Button
+        label={done ? t('planning.edit') : t('planning.fill')}
+        variant="small"
+        onPress={() => router.push({ pathname: '/voyages/[id]/dispos', params: { id: tripId } })}
+      />
+    </View>
+  );
+}
+
+function GroupDatesCard({ trip, planning }: { trip: Trip; planning: Planning }) {
+  const best = bestRanges(countByDay(planning), 1, Math.ceil(trip.members.length / 2))[0];
+  return (
+    <View style={[styles.card, styles.column, { backgroundColor: colors.skyTint }]}>
+      <AppText variant="bodyStrong">{t('planning.datesTitle')}</AppText>
+      <AppText style={styles.cardText}>
+        {best
+          ? t('planning.datesBest', {
+              range: formatRange(best.start, best.end),
+              count: best.available,
+              total: trip.members.length,
+            })
+          : t('planning.datesEmpty')}
+      </AppText>
+      <Button
+        label={t('planning.seeCalendar')}
+        variant="small"
+        style={styles.alignStart}
+        onPress={() => router.push({ pathname: '/voyages/[id]/dates', params: { id: trip.id } })}
+      />
+    </View>
+  );
+}
+
+function BudgetCard({ trip, planning }: { trip: Trip; planning: Planning }) {
+  const budget = groupBudget(planning);
+  if (!budget) return null;
+  const open = !Number.isFinite(budget.max);
+  const values = { min: formatEuros(budget.min), max: open ? '' : formatEuros(budget.max) };
+  const text = budget.common
+    ? open
+      ? t('planning.budgetCommonOpen', values)
+      : budget.min === budget.max
+        ? t('planning.budgetCommonExact', values)
+        : t('planning.budgetCommon', values)
+    : open
+      ? t('planning.budgetSpreadOpen', values)
+      : t('planning.budgetSpread', values);
+
+  return (
+    <View style={[styles.card, styles.column, { backgroundColor: colors.black }]}>
+      <AppText variant="bodyStrong" color={colors.lime}>
+        {t('planning.budgetTitle')}
+      </AppText>
+      <AppText color={colors.white} style={styles.cardText}>
+        {text}
+      </AppText>
+      <AppText variant="caption" color="rgba(255, 255, 255, 0.75)">
+        {t('planning.budgetAnswered', { count: budget.answered, total: trip.members.length })}
+      </AppText>
+    </View>
+  );
+}
+
+function WaitingCard({ trip, planning, me }: { trip: Trip; planning: Planning; me: string }) {
+  const waiting = trip.members.filter((m) => m.userId !== me && !hasAnswered(planning.get(m.userId)));
+  const remind = () => Share.share({ message: t('planning.remindMessage', { name: trip.name }) });
+
+  if (waiting.length === 0) {
+    return (
+      <View style={[styles.card, { backgroundColor: colors.limeTint }]}>
+        <AppText variant="bodyStrong">{t('planning.allAnswered')}</AppText>
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.card, { backgroundColor: colors.surface }]}>
+      <View style={styles.cardBody}>
+        <AppText variant="bodyStrong">{t('planning.waitingTitle')}</AppText>
+        <AppText style={styles.cardText}>{waiting.map((m) => m.firstName).join(', ')}</AppText>
+      </View>
+      <Button label={t('planning.remind')} variant="small" onPress={remind} />
+    </View>
   );
 }
 
@@ -169,9 +280,13 @@ const styles = StyleSheet.create({
   },
   groupText: { flexShrink: 1 },
   groupNames: { fontSize: 15, lineHeight: 21 },
-  sections: { paddingHorizontal: space.xl - 4, paddingTop: space.xl, gap: space.l },
-  next: { backgroundColor: colors.surface, borderRadius: radius.m, padding: space.xl, gap: space.m },
+  sections: { paddingHorizontal: space.xl - 4, paddingTop: space.xl, gap: space.m },
+  card: { borderRadius: radius.m, padding: space.l, flexDirection: 'row', alignItems: 'center', gap: space.m },
+  column: { flexDirection: 'column', alignItems: 'stretch', gap: space.s },
+  cardBody: { flex: 1, gap: 2 },
+  cardText: { fontSize: 15, lineHeight: 21 },
+  alignStart: { alignSelf: 'flex-start', marginTop: space.xs },
+  next: { backgroundColor: colors.surface, borderRadius: radius.m, padding: space.xl, gap: space.m, marginTop: space.s },
   nextRow: { flexDirection: 'row', alignItems: 'center', gap: space.m },
   dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.sunset },
-  nextText: { flexShrink: 1, fontSize: 15, lineHeight: 21 },
 });
