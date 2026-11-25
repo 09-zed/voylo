@@ -13,10 +13,11 @@ type Props = {
   subtitle: string;
   children: ReactNode;
   footer: ReactNode;
+  showBack?: boolean;
 };
 
 /** Shared layout for short form screens: back button, title, fields, action at the bottom. */
-export function FormScreen({ title, subtitle, children, footer }: Props) {
+export function FormScreen({ title, subtitle, children, footer, showBack = true }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -25,11 +26,15 @@ export function FormScreen({ title, subtitle, children, footer }: Props) {
         contentContainerStyle={[styles.content, { paddingTop: insets.top + space.s, paddingBottom: insets.bottom + space.l }]}
         keyboardShouldPersistTaps="handled"
       >
-        <Pressable accessibilityRole="button" accessibilityLabel={t('common.back')} onPress={() => router.back()} style={styles.back}>
-          <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
-            <Path d="m15 18-6-6 6-6" />
-          </Svg>
-        </Pressable>
+        {showBack ? (
+          <Pressable accessibilityRole="button" accessibilityLabel={t('common.back')} onPress={() => router.back()} style={styles.back}>
+            <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={colors.black} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+              <Path d="m15 18-6-6 6-6" />
+            </Svg>
+          </Pressable>
+        ) : (
+          <View style={styles.back} />
+        )}
 
         <AppText variant="display" accessibilityRole="header" style={styles.title}>
           {title}

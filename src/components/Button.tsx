@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, type PressableProps } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, type PressableProps } from 'react-native';
 
 import { colors, fonts, radius, touchTarget } from '@/theme';
 
@@ -7,13 +7,17 @@ type Variant = 'primary' | 'small' | 'link';
 type Props = Omit<PressableProps, 'children'> & {
   label: string;
   variant?: Variant;
+  /** Shows a spinner next to the label and ignores presses. */
+  loading?: boolean;
 };
 
-export function Button({ label, variant = 'primary', style, ...rest }: Props) {
+export function Button({ label, variant = 'primary', loading = false, style, ...rest }: Props) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled: !!rest.disabled, busy: loading }}
       {...rest}
+      onPress={loading ? undefined : rest.onPress}
       style={(state) => [
         styles.base,
         styles[variant],
@@ -22,7 +26,10 @@ export function Button({ label, variant = 'primary', style, ...rest }: Props) {
         typeof style === 'function' ? style(state) : style,
       ]}
     >
-      <Text style={labelStyles[variant]}>{label}</Text>
+      <View style={styles.row}>
+        {loading && <ActivityIndicator color={labelStyles[variant].color} />}
+        <Text style={labelStyles[variant]}>{label}</Text>
+      </View>
     </Pressable>
   );
 }
@@ -47,6 +54,7 @@ const styles = StyleSheet.create({
   link: {
     height: 48,
   },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   pressed: {
     transform: [{ scale: 0.97 }],
   },

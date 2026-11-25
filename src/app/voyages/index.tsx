@@ -10,16 +10,26 @@ import { Logo } from '@/components/Logo';
 import { PhotoPlaceholder } from '@/components/PhotoPlaceholder';
 import { demoTrips } from '@/data/demo';
 import { t } from '@/i18n';
+import { useAuth } from '@/lib/auth';
 import { daysUntil, formatDay } from '@/lib/dates';
 import { colors, radius, space } from '@/theme';
 
 export default function TripsScreen() {
   const insets = useSafeAreaInsets();
+  const { profile, signOut } = useAuth();
 
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={[styles.content, { paddingTop: insets.top + space.s }]}>
-        <Logo size={32} />
+        <View style={styles.top}>
+          <Logo size={32} />
+          {profile && <Button label={t('trips.signOut')} variant="link" onPress={signOut} />}
+        </View>
+        {profile && (
+          <AppText variant="bodyStrong" style={styles.hello}>
+            {t('trips.hello', { name: profile.first_name })}
+          </AppText>
+        )}
         <AppText variant="display" accessibilityRole="header" style={styles.title}>
           {t('trips.title')}
         </AppText>
@@ -63,7 +73,9 @@ export default function TripsScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.white },
   content: { paddingHorizontal: space.xl, paddingBottom: space.xl },
-  title: { marginTop: space.l },
+  top: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  hello: { marginTop: space.l },
+  title: { marginTop: space.xs },
   list: { marginTop: space.xl, gap: space.l },
   card: {
     borderRadius: radius.l,

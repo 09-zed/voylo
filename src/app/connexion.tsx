@@ -1,18 +1,46 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
+import { StyleSheet } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { FormScreen } from '@/components/FormScreen';
 import { TextField } from '@/components/TextField';
 import { t } from '@/i18n';
+import { useAuth } from '@/lib/auth';
+import { friendlyAuthError } from '@/lib/authErrors';
+import { supabaseConfigured } from '@/lib/supabase';
 import { colors } from '@/theme';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginScreen() {
+  const { sendCode } = useAuth();
   const [email, setEmail] = useState('');
-  const valid = EMAIL.test(email.trim());
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const cleanEmail = email.trim().toLowerCase();
+  const valid = EMAIL.test(cleanEmail);
+
+  const submit = async () => {
+    if (!valid || sending) return;
+
+    if (!supabaseConfigured) {
+      router.replace('/voyages');
+      return;
+    }
+
+    setSending(true);
+    setError(null);
+    const failure = await sendCode(cleanEmail);
+    setSending(false);
+
+    if (failure) {
+      setError(friendlyAuthError(failure));
+      return;
+    }
+    router.push({ pathname: '/verification', params: { email: cleanEmail } });
+  };
 
   return (
     <FormScreen
@@ -20,10 +48,9 @@ export default function LoginScreen() {
       subtitle={t('login.subtitle')}
       footer={
         <>
-          {/* Step 3 of plan.md connects this to Supabase. For now it opens the demo. */}
-          <Button label={t('login.submit')} disabled={!valid} onPress={() => router.replace('/voyages')} />
-          <AppText variant="caption" color={colors.textMuted} style={{ textAlign: 'center' }}>
-            {t('login.socialSoon')}
+          <Button label={t('login.submit')} disabled={!valid} loading={sending} onPress={submit} />
+          <AppText variant="caption" color={colors.textMuted} style={styles.note}>
+            {supabaseConfigured ? t('login.socialSoon') : t('login.demoNote')}
           </AppText>
         </>
       }
@@ -32,15 +59,24 @@ export default function LoginScreen() {
         label={t('login.emailLabel')}
         placeholder={t('login.emailPlaceholder')}
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(value) => {
+          setEmail(value);
+          setError(null);
+        }}
         keyboardType="email-address"
         autoCapitalize="none"
         autoComplete="email"
         textContentType="emailAddress"
         autoCorrect={false}
+        autoFocus
         returnKeyType="go"
-        onSubmitEditing={() => valid && router.replace('/voyages')}
+        onSubmitEditing={submit}
+        error={error}
       />
     </FormScreen>
   );
 }
+
+const styles = StyleSheet.create({
+  note: { textAlign: 'center' },
+});

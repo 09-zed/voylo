@@ -42,7 +42,7 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 |---|---|
 | Plateformes | iOS et Android avec un seul code. Tests et finitions d'abord sur iPhone. |
 | Stack | React Native + Expo (SDK 58) + TypeScript + Supabase |
-| Connexion | Lien magique par e-mail, Se connecter avec Apple, Se connecter avec Google |
+| Connexion | Code à 6 chiffres reçu par e-mail (fonctionne dans Expo Go), puis Se connecter avec Apple et Google à l'étape 8 |
 | Rejoindre un voyage | Installation de l'app obligatoire. Invitation par lien, avec un code de voyage court en secours (ex. `VOY-4K7P`). |
 | Rôles | Un ou plusieurs organisateurs avec plus de droits. Les autres sont participants. |
 | Dépenses | Calcul de « qui doit combien à qui » uniquement, sans paiement dans l'app. Euros seulement en V1. |
@@ -158,7 +158,7 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 
 ### Parcours principal
 1. **Accueil (non connecté)** : on présente Voylo et sa promesse.
-2. **Connexion** : Apple, Google, ou e-mail avec lien magique.
+2. **Connexion** : e-mail puis code à 6 chiffres. Apple et Google s'ajoutent à l'étape 8.
 3. **Profil express** : prénom et photo, c'est tout.
 4. **Mes voyages** : la liste des voyages en cours et à venir, plus un bouton « Créer un voyage » et une option « Rejoindre avec un code ».
 5. **Créer un voyage** : nom, photo de couverture, période envisagée.
@@ -253,6 +253,7 @@ Maquettes de référence : tableau « Voylo — Pistes typo », section « Direc
 ### Points d'attention
 - **Expo Go a ses limites.** Les notifications push, les liens qui ouvrent l'app et Se connecter avec Apple demandent une **development build**. Sur iPhone, ça nécessite le **compte Apple Developer (99 $ par an)**. Prévu vers la fin de la V1.0.
 - **Se connecter avec Apple** est exigé par Apple dès qu'une connexion Google est proposée.
+- **E-mails de connexion** : le service d'e-mail fourni par Supabase n'envoie qu'aux membres de l'équipe du projet, avec une limite très basse. Avant d'inviter les amis (étape 8), il faudra brancher un vrai service d'envoi d'e-mails (ex. Resend, gratuit pour démarrer).
 - **Les achats premium** passeront par Apple et Google, qui prennent 15 à 30 % de commission. À intégrer dans le calcul du prix le moment venu.
 - **Expo évolue vite.** On vérifie chaque fonctionnalité dans la documentation officielle d'Expo 58 avant de la coder (voir `AGENTS.md`).
 
@@ -267,7 +268,7 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 | 0 | ✅ **Fondations** : projet Expo, GitHub, Expo Go | L'écran « Voylo — Ça marche ! » |
 | 1 | ✅ **Identité et maquettes** : direction artistique, logo, couleurs, typos, maquettes des écrans clés | Les maquettes en images ou en prototype cliquable |
 | 2 | ✅ **Socle de l'app** : navigation, composants de base, traductions, thème | Une navigation entre écrans vides, avec le vrai style Voylo |
-| 3 | **Comptes** : projet Supabase, connexion par e-mail, profil express | Créer ton compte et te connecter |
+| 3 | **Comptes** : projet Supabase, connexion par code e-mail, profil express | Créer ton compte et te connecter |
 | 4 | **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre depuis un autre compte |
 | 5 | **Dispos, budget et dates compatibles** | Renseigner tes dispos et voir le calendrier du groupe |
 | 6 | **Sondages** | Créer un sondage, voter, clôturer |

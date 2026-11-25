@@ -4,9 +4,13 @@ import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 import { colors, fonts, radius } from '@/theme';
 import { AppText } from './AppText';
 
-type Props = TextInputProps & { label: string };
+type Props = TextInputProps & {
+  label: string;
+  /** Shown under the field, which turns red. */
+  error?: string | null;
+};
 
-export function TextField({ label, style, ...rest }: Props) {
+export function TextField({ label, error, style, ...rest }: Props) {
   const [focused, setFocused] = useState(false);
 
   return (
@@ -14,6 +18,7 @@ export function TextField({ label, style, ...rest }: Props) {
       <AppText variant="caption">{label}</AppText>
       <TextInput
         accessibilityLabel={label}
+        accessibilityHint={error ?? undefined}
         placeholderTextColor={colors.textMuted}
         {...rest}
         onFocus={(e) => {
@@ -24,8 +29,13 @@ export function TextField({ label, style, ...rest }: Props) {
           setFocused(false);
           rest.onBlur?.(e);
         }}
-        style={[styles.input, focused && styles.focused, style]}
+        style={[styles.input, focused && styles.focused, error ? styles.invalid : null, style]}
       />
+      {error ? (
+        <AppText variant="caption" color={colors.error} accessibilityLiveRegion="polite" accessibilityRole="alert">
+          {error}
+        </AppText>
+      ) : null}
     </View>
   );
 }
@@ -44,4 +54,5 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   focused: { borderColor: colors.black },
+  invalid: { borderColor: colors.error },
 });

@@ -15,6 +15,7 @@ export const colors = {
   // Neutrals
   textMuted: '#4A5560',
   border: '#D5DCE3',
+  error: '#C81E1E',
 
   // Stand-in for photos until the real ones arrive.
   night: '#1D3B5A',
