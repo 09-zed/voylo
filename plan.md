@@ -5,7 +5,7 @@
 
 Ce document est notre référence pour tout le projet. On le met à jour à chaque décision importante.
 
-- **Statut** : étapes 0 à 6 terminées (l'app a sa vraie structure : onglets Accueil, Voyages, Profil et onglets du voyage). Prochaine étape : les sondages et le swipe logement.
+- **Statut** : étapes 0 à 6 terminées. Étape 7 en cours : le swipe logement est codé (ajouter une annonce, swiper, verdict, « C'est un match ! », validation par l'organisateur), à tester sur iPhone. Reste dans l'étape 7 : les sondages classiques (activités, restos…).
 - **Maquettes de référence** : tableau « Voylo — Maquettes de l'app » (https://claude.ai/artifact/3Rrk1EXcxvN3G4TWPgsg1N)
 - **Dernière mise à jour** : 25 novembre 2026 (maquettes de toute l'app, swipe logement)
 
@@ -140,6 +140,7 @@ Projet perso, destiné à devenir public. Pas d'échéance fixe : on avance éta
 - **Swiper** : chacun passe les annonces une par une, à droite j'aime, à gauche non, avec un bouton pour annuler le dernier choix.
 - **Verdict** : quand tout le monde a swipé (ou quand l'organisateur clôt), classement par nombre de likes. En cas d'égalité, l'organisateur tranche. Si tout le monde a liké la même annonce : écran « C'est un match ! ».
 - **Après** : l'organisateur valide le logement ; le bouton mène à l'annonce pour réserver. Les doublons (même lien collé deux fois) sont repérés.
+- **Pas encore fait** : ajouter sa propre photo quand l'annonce n'en donne pas (arrive avec les photos de profil, étape 10). En attendant, un bloc bleu avec le nom du site la remplace.
 
 ### Compte à rebours
 - S'affiche dès que les dates sont fixées.
@@ -307,7 +308,7 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 | 4 | ✅ **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre |
 | 5 | ✅ **Dispos, budget et dates compatibles** | Tes dispos, le calendrier du groupe, le budget commun |
 | 6 | ✅ **Nouvelle navigation** : onglets Accueil, Voyages, Profil ; onglets du voyage ; Accueil social | L'app avec sa vraie structure |
-| 7 | **Sondages et swipe logement** | Ajouter des annonces, swiper, voir le verdict |
+| 7 | 🟡 **Sondages et swipe logement** : swipe logement fait, sondages classiques à suivre | Ajouter des annonces, swiper, voir le verdict |
 | 8 | **Dépenses légères** : nées des décisions (« Qui a payé ? »), ajout en 3 secondes, « Pour être quittes » au retour | Valider un logement, dire qui a payé, voir qui doit quoi |
 | 9 | **Planning** jour par jour | Construire le programme d'un voyage |
 | 10 | **Gérer son voyage** : modifier, quitter, retirer quelqu'un, photo de profil, mises à jour en direct | Changer les infos d'un voyage |
@@ -316,20 +317,6 @@ Chaque étape se termine par quelque chose que tu peux tester sur ton iPhone.
 | 13 | **Lancement public** : App Store, page de présentation, politique de confidentialité | — |
 
 L'ordre des étapes 7 à 12 peut bouger. Pour que tes amis utilisent Voylo pendant le week-end du 30 décembre, il faudra faire l'étape 12 avant, et l'inscription Apple Developer peut prendre quelques jours : mieux vaut la lancer tôt.
-
----|---|---|
-| 0 | ✅ **Fondations** : projet Expo, GitHub, Expo Go | L'écran « Voylo — Ça marche ! » |
-| 1 | ✅ **Identité et maquettes** : direction artistique, logo, couleurs, typos, maquettes des écrans clés | Les maquettes en images ou en prototype cliquable |
-| 2 | ✅ **Socle de l'app** : navigation, composants de base, traductions, thème | Une navigation entre écrans vides, avec le vrai style Voylo |
-| 3 | ✅ **Comptes** : projet Supabase, connexion par code e-mail, profil express | Créer ton compte et te connecter |
-| 4 | ✅ **Voyages et invitations** : créer, lister, rejoindre avec un code | Créer un voyage, le rejoindre depuis un autre compte |
-| 5 | **Dispos, budget et dates compatibles** | Renseigner tes dispos et voir le calendrier du groupe |
-| 6 | **Sondages** | Créer un sondage, voter, clôturer |
-| 7 | **Compte à rebours et finitions de la V1.0** : animations, états vides, erreurs | La V1.0 complète |
-| 8 | **Passage en vrai** : compte Apple Developer, development build, connexion Apple et Google, liens d'invitation, notifications, TestFlight | L'app installée « pour de vrai », envoyée à tes amis |
-| 9 | **V1.1 — Planning** | Construire le programme d'un voyage |
-| 10 | **V1.2 — Dépenses** | Ajouter des dépenses et voir les soldes |
-| 11 | **Préparation du lancement public** : App Store, page de présentation, politique de confidentialité | — |
 
 ---
 

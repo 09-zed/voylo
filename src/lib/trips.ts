@@ -26,6 +26,8 @@ export type Trip = {
   endDate: string | null;
   status: TripStatus;
   inviteCode: string;
+  /** The lodging the group settled on (step 7). */
+  chosenListingId: string | null;
   members: TripMember[];
 };
 
@@ -38,6 +40,7 @@ type TripRow = {
   end_date: string | null;
   status: TripStatus;
   invite_code: string;
+  chosen_listing_id: string | null;
   trip_members: {
     user_id: string;
     role: Role;
@@ -49,7 +52,7 @@ type TripRow = {
 // The relationship names are spelled out because other tables (availability_days,
 // member_preferences) also link trips, members and profiles, and the API won't guess.
 const TRIP_FIELDS =
-  'id, name, cover, period_label, start_date, end_date, status, invite_code, ' +
+  'id, name, cover, period_label, start_date, end_date, status, invite_code, chosen_listing_id, ' +
   'trip_members!trip_members_trip_id_fkey(user_id, role, joined_at, profiles!trip_members_user_profile_fkey(first_name, avatar_url))';
 
 const AVATAR_COLORS = [colors.sunset, colors.sky, colors.lime, colors.black];
@@ -81,6 +84,7 @@ function toTrip(row: TripRow): Trip {
     endDate: row.end_date,
     status: row.status,
     inviteCode: row.invite_code,
+    chosenListingId: row.chosen_listing_id,
     members,
   };
 }

@@ -12,11 +12,13 @@ import { CoverImage } from '@/components/CoverImage';
 import { InviteCard } from '@/components/InviteCard';
 import { ComingSoon } from '@/components/trip/ComingSoon';
 import { GroupDates } from '@/components/trip/GroupDates';
+import { LodgingCard } from '@/components/trip/LodgingCard';
 import { isTripTab, TripTabs, type TripTab } from '@/components/trip/TripTabs';
 import { t } from '@/i18n';
 import { useAuth } from '@/lib/auth';
 import { coverFor } from '@/lib/covers';
 import { daysUntil, formatDay, formatEuros, formatRange } from '@/lib/dates';
+import { fetchListings, type Listing } from '@/lib/listings';
 import { fetchPlanning, groupBudget, hasAnswered, type Planning } from '@/lib/planning';
 import { fetchTrip, useLoad, type Trip } from '@/lib/trips';
 import { colors, fonts, radius, space, touchTarget } from '@/theme';
@@ -29,8 +31,8 @@ export default function TripScreen() {
   const { session } = useAuth();
   const me = session?.user.id ?? '';
   const { data, error, loading, refresh } = useLoad(async () => {
-    const [trip, planning] = await Promise.all([fetchTrip(id), fetchPlanning(id)]);
-    return { trip, planning };
+    const [trip, planning, listings] = await Promise.all([fetchTrip(id), fetchPlanning(id), fetchListings(id)]);
+    return { trip, planning, listings };
   });
 
   const goBack = () => (router.canGoBack() ? router.back() : router.replace('/voyages'));
@@ -50,7 +52,7 @@ export default function TripScreen() {
     );
   }
 
-  const { planning } = data;
+  const { planning, listings } = data;
   const cover = coverFor(trip.cover);
   const days = trip.startDate ? daysUntil(trip.startDate) : null;
   const solo = trip.members.length === 1;
@@ -102,10 +104,10 @@ export default function TripScreen() {
 
       <View style={styles.body}>
         {tab === 'apercu' && (
-          <Overview trip={trip} planning={planning} me={me} solo={solo} onOpen={setTab} />
+          <Overview trip={trip} planning={planning} listings={listings} me={me} solo={solo} onOpen={setTab} />
         )}
         {tab === 'dates' && <GroupDates trip={trip} planning={planning} isOrganizer={isOrganizer} onChanged={refresh} />}
-        {tab === 'sondages' && <ComingSoon title={t('soon.sondagesTitle')} text={t('soon.sondagesText')} sticker="coeur" />}
+        {tab === 'sondages' && <LodgingCard trip={trip} listings={listings} />}
         {tab === 'planning' && <ComingSoon title={t('soon.planningTitle')} text={t('soon.planningText')} sticker="pin" />}
         {tab === 'depenses' && <ComingSoon title={t('soon.depensesTitle')} text={t('soon.depensesText')} sticker="billet" />}
       </View>
@@ -113,7 +115,29 @@ export default function TripScreen() {
   );
 }
 
-function Overview({ trip, planning, me, solo, onOpen }: { trip: Trip; planning: Planning; me: string; solo: boolean; onOpen: (tab: TripTab) => void }) {
+function Overview({
+  trip,
+  planning,
+  listings,
+  me,
+  solo,
+  onOpen,
+}: {
+  trip: Trip;
+  planning: Planning;
+  listings: Listing[];
+  me: string;
+  solo: boolean;
+  onOpen: (tab: TripTab) => void;
+}) {
+  const chosen = listings.find((l) => l.id === trip.chosenListingId);
+  const lodgingValue = chosen
+    ? chosen.title
+    : listings.length === 0
+      ? t('overview.lodgingTodo')
+      : listings.length === 1
+        ? t('lodging.countOne')
+        : t('lodging.count', { count: listings.length });
   const done = hasAnswered(planning.get(me));
   const budget = groupBudget(planning);
   const budgetText = budget
@@ -156,7 +180,13 @@ function Overview({ trip, planning, me, solo, onOpen }: { trip: Trip; planning: 
           dark
           onPress={() => onOpen('dates')}
         />
-        <Tile label={t('overview.pollsTile')} value={t('overview.soon')} background={colors.surface} onPress={() => onOpen('sondages')} />
+        <Tile
+          label={t('overview.lodgingTile')}
+          value={lodgingValue}
+          foot={chosen ? t('overview.lodgingChosen') : ''}
+          background={chosen ? colors.limeTint : colors.surface}
+          onPress={() => onOpen('sondages')}
+        />
         <Tile label={t('overview.expensesTile')} value={t('overview.soon')} background={colors.lime} onPress={() => onOpen('depenses')} />
       </View>
 
